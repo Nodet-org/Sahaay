@@ -38,6 +38,7 @@ const AddResource = () => {
           initialValue={{
             resource: "oxygen",
           }}
+          requiredMark={false}
         >
           <Form.Item
             label="Resource"
