@@ -4,11 +4,15 @@
 
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #e5e5e5;
+  background-color: #e5e5e5 !important;
+}
+
+#root {
   max-width: 800px;
+  height: 100vh;
   margin-left: auto;
   margin-right: auto;
 }

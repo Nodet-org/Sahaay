@@ -25,10 +25,10 @@ const Header = () => {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-transparent outline-none"
+          className="bg-transparent outline-none flex-1"
           placeholder="Search by Pincode"
         />
-        <button type="submit" className="outline-none">
+        <button type="submit" className="outline-none pl-3">
           <img src={searchIcon} alt="Search" />
         </button>
       </form>
