@@ -1,10 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="App">
-      COVID19 Resources
+    <div>
+      <Header />
+      <div className="App">COVID19 Resources</div>
     </div>
   );
 }
