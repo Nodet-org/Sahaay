@@ -1,3 +1,5 @@
+@import url("antd/dist/antd.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +12,7 @@ body {
   background-color: #e5e5e5 !important;
 }
 
-#root {
+.home__container {
   max-width: 800px;
   height: 100vh;
   margin-left: auto;
