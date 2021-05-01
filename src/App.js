@@ -1,11 +1,8 @@
-import Header from "./components/Header";
+import ResourceCard from "./components/ResourceCard";
 
 function App() {
   return (
-    <div>
-      <Header />
-      <div className="App">COVID19 Resources</div>
-    </div>
+    <ResourceCard />
   );
 }
 
