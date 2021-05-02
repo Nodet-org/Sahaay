@@ -12,6 +12,11 @@ body {
   background-color: #e5e5e5 !important;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .home__container {
   max-width: 800px;
   height: 100vh;
@@ -22,4 +27,12 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.ant-modal-content {
+  border-radius: 10px;
+}
+.ant-modal-close {
+  outline: none;
+  border: none;
 }
