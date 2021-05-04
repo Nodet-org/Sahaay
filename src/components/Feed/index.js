@@ -56,7 +56,7 @@ const Feed = ({ query, setCurrentTab, city }) => {
     return <p className="text-center my-4">Search to get results...</p>;
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center feedContainer">
       {Object.keys(feed).length > 0 ? (
         Object.keys(feed).map((post) => (
           <Card

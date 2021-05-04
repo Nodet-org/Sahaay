@@ -100,7 +100,13 @@ const AddResource = () => {
         >
           Add Resource
         </span>
-        <img src={plusIcon} alt="Add" className="h-8 w-8" />
+        <img
+          src={plusIcon}
+          alt="Add"
+          height="32"
+          width="32"
+          className="h-8 w-8"
+        />
       </div>
       <div>
         <Modal

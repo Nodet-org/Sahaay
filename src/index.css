@@ -1,5 +1,5 @@
 @import url("antd/dist/antd.css");
-@import url("react-static-tweets/styles.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,7 +12,6 @@ body {
   font-family: "Inter", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f0fb !important;
 }
 
 * {
@@ -78,4 +77,29 @@ ul {
 .ant-modal-close {
   outline: none;
   border: none;
+}
+
+.ant-tabs-tab-active div {
+  color: #08415c !important;
+  @apply font-semibold;
+}
+.ant-tabs-ink-bar {
+  background: #08415c !important;
+}
+.feedContainer {
+  min-height: 60vh;
+}
+
+.tweetWrapper div {
+  @apply w-full;
+}
+.tweetWrapper div div div {
+  @apply w-full;
+}
+.tweetWrapper div div div {
+  max-width: unset !important;
+  @apply flex justify-center;
+}
+.tweetWrapper div div div iframe {
+  max-width: 550px !important;
 }
