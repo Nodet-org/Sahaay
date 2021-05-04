@@ -5,13 +5,14 @@ import { db } from "../../utils/firebase";
 import warningIcon from "../../assets/warningLight.svg";
 import phoneLightIcon from "../../assets/phoneLight.svg";
 import closeIcon from "../../assets/close.svg";
-import cylinderIcon from "../../assets/cylinder.svg";
 import personIcon from "../../assets/person.svg";
 import phoneIcon from "../../assets/phone.svg";
 import timeIcon from "../../assets/time.svg";
 import dateIcon from "../../assets/date.svg";
 import emailIcon from "../../assets/email.svg";
 import priceIcon from "../../assets/price.svg";
+
+import { getIcon } from "../../utils/helpers";
 
 const ResourceCard = (props) => {
   const [isReported, setIsReported] = useState(false);
@@ -62,7 +63,8 @@ const ResourceCard = (props) => {
       centered
     >
       <div className="flex items-center">
-        <img src={cylinderIcon} alt="icon" />
+        {/* <img src={() => getIcon(props.resource)} alt="icon" /> */}
+        {getIcon(props.resource, 12)}
         <p className="text-2xl pl-5">{props.resource.toUpperCase()}</p>
       </div>
       <div className="flex items-center justify-center text-base my-6">

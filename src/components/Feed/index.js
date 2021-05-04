@@ -76,7 +76,7 @@ const Feed = ({ query, setCurrentTab, city }) => {
           </p>
           <span
             onClick={() => setCurrentTab("2")}
-            className="py-2 px-4 bg-green-500 text-white rounded text-base font-bold my-4 cursor-pointer"
+            className="py-2 px-4 bg-theme-color text-white rounded text-base font-bold my-4 cursor-pointer"
           >
             Checkout the tweets section
           </span>
