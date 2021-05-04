@@ -1,15 +1,18 @@
 @import url("antd/dist/antd.css");
+@import url("react-static-tweets/styles.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html,
 body {
   margin: 0;
+  padding: 0;
   font-family: "Inter", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #e5e5e5 !important;
+  background-color: #f8f0fb !important;
 }
 
 .home__container {
@@ -19,7 +22,47 @@ body {
   margin-right: auto;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+.flex-2 {
+  flex: 2 1 0%;
+}
+
+@media screen and (max-width: 575px) {
+  .verified div {
+    padding: 0 10px 0 0 !important;
+  }
+}
+
+button {
+  outline: none !important;
+}
+
+ul {
+  list-style: disc;
+}
+
+.ant-modal-content {
+  border-radius: 10px;
+}
+.ant-modal-close span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+@media screen and (max-width: 500px) {
+  .addResourceButton {
+    width: 64px !important;
+  }
+  .addResourceButton > span {
+    display: none;
+  }
 }
