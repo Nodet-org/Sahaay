@@ -3,6 +3,7 @@ import { useState } from "react";
 import Medicine from "../../assets/medicine.svg";
 
 import ResourceCard from "../ResourceCard";
+import { getIcon } from "../../utils/helpers";
 
 const Card = ({ post, resource, location }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,7 +35,7 @@ const Card = ({ post, resource, location }) => {
             {post?.time}
           </p>
           <div className="flex items-center">
-            <img width={30} height={30} src={Medicine} />
+            { getIcon(resource, 8) }
             <p className="font-bold text-xl pl-2">{resource.toUpperCase()}</p>
           </div>
         </div>
