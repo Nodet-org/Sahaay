@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 
 import { db } from "../../utils/firebase";
+import { API_URL } from "../../utils/constants";
 
 const { Option } = Select;
 
@@ -11,151 +12,25 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [searchSelect, setSearchSelect] = useState("oxygen");
   const [verified, setVerified] = useState(true);
 
-  const parseSearchParameters = (resource) => {
-    const parameters = {
-      oxygen: ["oxygen"],
-      icu: ["icu"],
-      bed: ["bed", "beds"],
-      ventilator: ["ventilator", "ventilators"],
-      test: ["test", "tests", "testing"],
-      fabiflu: ["fabiflu"],
-      remdesivir: ["remdesivir"],
-      favipiravir: ["favipiravir"],
-      tocilizumab: ["tocilizumab"],
-      plasma: ["plasma"],
-      food: ["food", "foods", "tiffin", "tiffins"],
-      ambulance: ["ambulance", "ambulances"],
-    };
-
-    if (parameters[resource]) {
-      let searchParameter =
-        "%28" + parameters[resource].map((query) => query).join("+OR+") + "%29";
-      return searchParameter;
-    }
-    return "";
-  };
-
-  const parseCity = async (cityOrPincode) => {
-    let city = "";
-    if (!isNaN(parseInt(cityOrPincode))) {
-      try {
-        const response = await (
-          await fetch("https://api.postalpincode.in/pincode/" + cityOrPincode)
-        ).json();
-        if (response[0].Status && response[0].PostOffice.length) {
-          city = response[0].PostOffice[0].Region;
-        } else {
-          return { inValid: "pincode" };
-        }
-      } catch (err) {
-        console.log(err);
-        return { inValid: "pincode" };
-      }
-    } else {
-      city = cityOrPincode;
-    }
-    return city;
-  };
-
-  const generateLink = async ({ cityOrPincode, verified, resource }) => {
-    const url = "https://twitter.com/search?q=";
-    let search = verified ? "verified" : "";
-    let city = await parseCity(cityOrPincode);
-    if (city?.inValid) return city;
-    let parameters = parseSearchParameters(resource);
-    let twitterAPIParams = `${search} ${city} ${resource} -"any" -"requirement" -"requirements" -"requires" -"require" -"required" -"request" -"requests" -"requesting" -"needed" -"needs" -"need" -"seeking" -"seek" -"not verified" -"notverified" -"looking" -"unverified" -"urgent" -"urgently" -"urgently required" -"sending" -"send" -"help" -"dm" -"get" -"year" -"old" -"male" -"female" -"saturation" -is:reply -is:retweet -is:quote&max_results=20&tweet.fields=created_at,public_metrics&expansions=author_id`;
-    search += `+${city}+${parameters}&f=live`;
-    const link = url + search;
-    return { link, twitterAPIParams, city: city.toLowerCase() };
-  };
-
-  const getTweets = async (parameter, city, resource) => {
-    const url = "https://api.twitter.com/2/tweets/search/recent";
-    const data = await db.ref(`tweets/${city}/${resource}`).once("value");
-    try {
-      const twitterUrl = `${url}?${
-        data.val()?.sinceId ? `since_id=${data.val()?.sinceId}&` : ""
-      }query=${parameter}`;
-      let response;
-      if (
-        data.val() === null ||
-        new Date(
-          new Date(data.val()?.lastUpdated).setMinutes(
-            new Date(data.val()?.lastUpdated).getMinutes() + 5
-          )
-        ).getTime() -
-          new Date().getTime() <
-          0
-      ) {
-        console.log("Fetching, data is old...", data.val()?.lastUpdated);
-        response = await axios.get(twitterUrl, {
-          headers: {
-            Authorization: `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
-          },
-        });
-      }
-      console.log(response?.data);
-      if (response?.data?.meta?.result_count > 0) {
-        console.log("Fetching from api :(");
-        const tweets = response.data?.data?.map((tweet) => tweet.id);
-        return { tweets, sinceId: response.data.meta.newest_id };
-      } else {
-        console.log("Fetching from db..");
-        return { tweets: [], sinceId: "" };
-      }
-    } catch (err) {
-      console.log(err, "ERROR");
-      return { tweets: [], sinceId: "" };
-    }
-  };
-
   const handleSubmit = async (e) => {
+    setTweets([]);
     e.preventDefault();
-    let response;
     let query = {
       cityOrPincode: search,
       resource: searchSelect,
       verified: verified,
     };
-    const { twitterAPIParams, link, city } = await generateLink(query);
-    const dbref = db.ref(`tweets/${city}/${query.resource}`);
 
-    const { tweets, sinceId } = await getTweets(
-      twitterAPIParams,
-      city,
-      query.resource
-    );
-
-    if (link) {
-      let payload = {};
-      await dbref.once("value", (snapshot) => {
-        if (snapshot.exists()) {
-          if (snapshot.val()) {
-            let totalTweets = [...tweets, ...snapshot.val().tweets];
-            payload = {
-              tweets: totalTweets,
-              lastUpdated: new Date().toISOString(),
-              sinceId: sinceId || snapshot.val().sinceId,
-            };
-          }
-        } else {
-          if (sinceId)
-            payload = {
-              tweets,
-              lastUpdated: new Date().toISOString(),
-              sinceId: sinceId,
-            };
-        }
-      });
-      if (Object.keys(payload).length > 0) await dbref.set(payload);
-      response = {
-        success: true,
-        city: city,
-        link: link,
-        tweets: payload.tweets,
-      };
-    }
-
+    const response = await (
+      await fetch(`${API_URL}/api/scrape`, {
+        method: "post",
+        body: JSON.stringify(query),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+    console.log(response);
     if (response.success) {
       query = {
         city: response.city,
@@ -175,8 +50,12 @@ const Header = ({ setTweets, setLink, setQuery }) => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
+          <label htmlFor="search" className="hidden">
+            Search
+          </label>
           <input
             type="text"
+            id="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none flex-1"
@@ -207,10 +86,12 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             label="Verified"
             tooltip="Currently only works on tweet tab"
             className="flex-1 w-full flex items-center h-full my-0 sm:px-4 py-1 verified"
+            htmlFor="verified"
           >
             <Checkbox
               onChange={(e) => setVerified(e.target.checked)}
               checked={verified}
+              id="verified"
             />
           </Form.Item>
           <input

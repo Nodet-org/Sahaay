@@ -18,5 +18,5 @@ export const getIcon = (resource, size) => {
     else if (resource === "plasma") icon = blood;
     else if (resource === "food") icon = food;
     else if (resource === "ambulance") icon = ambulance;
-    return <img src={icon} alt="Medicine" className={iconStyle} />;
+    return <img src={icon} alt="Medicine" className={iconStyle} alt={resource.toUpperCase()} />;
 }
