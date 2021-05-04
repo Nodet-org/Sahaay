@@ -15,6 +15,11 @@ body {
   background-color: #f8f0fb !important;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .home__container {
   max-width: 800px;
   height: 100vh;
@@ -65,4 +70,12 @@ ul {
   .addResourceButton > span {
     display: none;
   }
+}
+
+.ant-modal-content {
+  border-radius: 10px;
+}
+.ant-modal-close {
+  outline: none;
+  border: none;
 }
