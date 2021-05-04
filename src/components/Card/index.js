@@ -35,8 +35,13 @@ const Card = ({ post, resource, location }) => {
             {post?.time}
           </p>
           <div className="flex items-center">
-            <img width={30} height={30} src={Medicine} />
-            <p className="font-bold text-xl pl-2">{resource.toUpperCase()}</p>
+            <img
+              width={30}
+              height={30}
+              src={Medicine}
+              alt={resource.toUpperCase()}
+            />
+            <p className="font-bold text-lg pl-2">{resource.toUpperCase()}</p>
           </div>
         </div>
         <div className="my-2 w-full">

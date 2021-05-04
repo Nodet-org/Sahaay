@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchTweetAst } from "static-tweets";
-// import { Tweet } from "react-static-tweets";
+import { Tweet } from "react-twitter-widgets";
 import { message } from "antd";
+import { API_URL } from "../../utils/constants";
 
 const Tweets = ({ tweets, link, currentTab }) => {
   const [tweetsJSON, setTweetsJSON] = useState([]);
@@ -15,41 +15,6 @@ const Tweets = ({ tweets, link, currentTab }) => {
       // getTweets();
     }
   }, [tweets, loadMore]);
-
-  // const getTweetJSON = async ({ tweets }) => {
-  //   const tweetsId = tweets;
-  //   for (let i = 0; i < tweetsId.length; i++) {
-  //     const tweetJSON = await fetchTweetAst(tweetsId[i]);
-  //     tweetsJSON.push(tweetJSON);
-  //   }
-  //   return {
-  //     tweets: tweetsJSON,
-  //   };
-  // };
-
-  // const getTweets = async () => {
-  //   try {
-  //     const data = await getTweetJSON({
-  //       tweets: tweets.slice(
-  //         offset || 0,
-  //         limit || tweets?.length < 20 ? 20 : tweets?.length
-  //       ),
-  //     });
-  //     if (tweets) {
-  //       if (limit + 10 > tweets) {
-  //         setOffset(limit);
-  //         setLimit(tweets.length);
-  //       } else {
-  //         setOffset(limit);
-  //         setLimit((d) => d + 10);
-  //       }
-  //       setTweetsJSON((prev) => [...prev, ...data.tweets]);
-  //     }
-  //   } catch (err) {
-  //     message.error("Some error occured. Please try after few mins");
-  //     console.log(err);
-  //   }
-  // };
 
   if (!link) return <p className="text-center my-4">Search to fetch tweets</p>;
   return (
@@ -70,9 +35,9 @@ const Tweets = ({ tweets, link, currentTab }) => {
             </a>
           </div>
         )}
-        {tweetsJSON.map((tweet, i) => (
-          <div className="w-full flex justify-center my-4" key={i}>
-            {/* <Tweet id={i} ast={tweet} /> */}
+        {tweets.map((tweet, i) => (
+          <div className="w-full flex justify-center my-4 tweetWrapper" key={i}>
+            <Tweet tweetId={tweet} />
           </div>
         ))}
         {tweets && limit < tweets.length && (

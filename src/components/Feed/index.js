@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "../../utils/firebase";
 
 import Card from "../Card";
+import CenteredSpinner from "../CenteredSpinner";
 
 const Feed = ({ query, setCurrentTab, city }) => {
   const [feed, setFeed] = useState([]);
@@ -53,10 +54,10 @@ const Feed = ({ query, setCurrentTab, city }) => {
   };
 
   if (Object.keys(query).length === 0 && feed.length === 0)
-    return <p className="text-center my-4">Search to get results...</p>;
+    return <CenteredSpinner text="Hold on fetching you data.." />;
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center feedContainer">
       {Object.keys(feed).length > 0 ? (
         Object.keys(feed).map((post) => (
           <Card
