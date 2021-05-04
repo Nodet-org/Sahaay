@@ -13,6 +13,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [verified, setVerified] = useState(true);
 
   const handleSubmit = async (e) => {
+    setTweets([]);
     e.preventDefault();
     let query = {
       cityOrPincode: search,

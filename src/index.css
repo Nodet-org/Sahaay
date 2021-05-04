@@ -103,3 +103,7 @@ ul {
 .tweetWrapper div div div iframe {
   max-width: 550px !important;
 }
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #08415c;
+  border: #08415c;
+}
