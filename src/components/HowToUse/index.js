@@ -98,12 +98,12 @@ const HowToUse = () => {
           <li className="mx-4 py-1 px-2 text-base">
             Let us know in the Github issues section. This app was created with{" "}
             <a
-              href="https://nextjs.org"
+              href="https://reactjs.org/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-theme-color font-bold"
             >
-              NextJS
+              ReactJS
             </a>{" "}
             and{" "}
             <a

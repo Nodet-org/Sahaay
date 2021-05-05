@@ -46,7 +46,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   return (
     <div className="flex flex-col py-4">
       <div className="flex items-center justify-center mx-5 my-2">
-        <div className="font-semibold text-2xl">COVID-19 Resources</div>
+        <div className="font-semibold text-2xl">Sahaay</div>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
