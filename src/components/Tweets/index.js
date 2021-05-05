@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import TweetCard from "../TweetCard";
 
 const Tweets = ({ tweets, link, currentTab }) => {
-  const [limit, setLimit] = useState(0);
+  const [limit, setLimit] = useState(5);
   const [toggleShow, setToggleShow] = useState(true);
   const [loading, setLoading] = useState(false);
 
