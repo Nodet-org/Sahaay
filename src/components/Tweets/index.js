@@ -3,18 +3,17 @@ import { useEffect, useState } from "react";
 import TweetCard from "../TweetCard";
 
 const Tweets = ({ tweets, link, currentTab }) => {
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(0);
   const [toggleShow, setToggleShow] = useState(true);
-  const [tweetsList, setTweetsList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (tweets?.length !== 0) {
       setLoading(true);
-      if (limit + 10 > tweets?.length) {
+      if (limit + 5 > tweets?.length) {
         setLimit(tweets?.length);
       } else {
-        setLimit((prev) => prev + 10);
+        setLimit((prev) => prev + 5);
       }
       setLoading(false);
     }
@@ -43,7 +42,7 @@ const Tweets = ({ tweets, link, currentTab }) => {
           </div>
         )}
         {tweets && tweets.length > 0 ? (
-          tweets.map((tweet, i) => (
+          tweets.slice(0, limit).map((tweet, i) => (
             <div
               className="w-full flex justify-center my-4 tweetWrapper"
               key={i}
@@ -54,7 +53,7 @@ const Tweets = ({ tweets, link, currentTab }) => {
         ) : (
           <div className="my-4 font-bold text-lg">Fetching Tweets...</div>
         )}
-        {tweetsList?.length > 0 && tweets && limit < tweets.length && (
+        {tweets && limit < tweets.length && (
           <Button
             onClick={() => setToggleShow((prev) => !prev)}
             className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
