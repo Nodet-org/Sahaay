@@ -128,7 +128,7 @@ const HowToUse = () => {
           </a>
           <span>Or</span>
           <a
-            href="https://twitter.com"
+            href="https://twitter.com/NodetOrg"
             rel="noopener noreferrer"
             target="_blank"
             className="text-theme-color font-bold"
