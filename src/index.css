@@ -41,6 +41,7 @@ a {
 @media screen and (max-width: 575px) {
   .verified div {
     padding: 0 10px 0 0 !important;
+    flex: unset !important;
   }
 }
 

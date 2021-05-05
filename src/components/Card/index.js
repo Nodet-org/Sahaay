@@ -32,11 +32,11 @@ const Card = ({ post, resource, location }) => {
       >
         <div className="flex justify-between w-full flex-row-reverse items-center">
           <p className="text-right">
-            <span className="text-gray-500">Posted at: </span>
-            {post?.time}
+            {/* <span className="text-gray-500">Posted at: </span> */}
+            {post?.time.substring(0, 5)}
           </p>
           <div className="flex items-center">
-            { getIcon(resource, 35) }
+            {getIcon(resource, 35)}
             <p className="font-bold text-xl pl-2">{resource.toUpperCase()}</p>
           </div>
         </div>
