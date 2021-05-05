@@ -36,7 +36,7 @@ const Card = ({ post, resource, location }) => {
             {post?.time}
           </p>
           <div className="flex items-center">
-            { getIcon(resource, 8) }
+            { getIcon(resource, 35) }
             <p className="font-bold text-xl pl-2">{resource.toUpperCase()}</p>
           </div>
         </div>

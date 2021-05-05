@@ -65,7 +65,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             placeholder="Search by Pincode/City"
           />
         </div>
-        <div className="mb-2 mx-5 flex flex-col sm:flex-row items-center">
+        <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
           <Select
             defaultValue={searchSelect}
             onChange={(e) => setSearchSelect(e)}

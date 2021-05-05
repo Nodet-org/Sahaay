@@ -64,7 +64,7 @@ const ResourceCard = (props) => {
     >
       <div className="flex items-center">
         {/* <img src={() => getIcon(props.resource)} alt="icon" /> */}
-        {getIcon(props.resource, 12)}
+        {getIcon(props.resource, 50)}
         <p className="text-2xl pl-5">{props.resource.toUpperCase()}</p>
       </div>
       <div className="flex items-center justify-center text-base my-6">
