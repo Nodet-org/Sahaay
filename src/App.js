@@ -1,17 +1,15 @@
 import React, { Suspense, useEffect, useState } from "react";
-import { Tabs, message } from "antd";
+import { Tabs } from "antd";
+import ReactGA from "react-ga";
+
 import CenteredSpinner from "./components/CenteredSpinner";
 import Header from "./components/Header";
 import AddResource from "./components/AddResource";
 import Footer from "./components/Footer";
 import HowToUse from "./components/HowToUse";
 
-// const Header = React.lazy(() => import("./components/Header"));
-// const Footer = React.lazy(() => import("./components/Footer"));
-// const AddResource = React.lazy(() => import("./components/AddResource"));
 const Feed = React.lazy(() => import("./components/Feed"));
 const Tweets = React.lazy(() => import("./components/Tweets"));
-// const HowToUse = React.lazy(() => import("./components/HowToUse"));
 
 const { TabPane } = Tabs;
 
@@ -23,6 +21,7 @@ const App = () => {
   const [askLocation, setAskLocation] = useState(false);
 
   useEffect(() => {
+    ReactGA.initialize("G-9MQHCT81HD");
     if (!localStorage.getItem("isExperiencedUser")) {
       setCurrentTab("3");
       localStorage.setItem("isExperiencedUser", true);
@@ -32,7 +31,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("isExperiencedUser") && ["3", "1"].indexOf(currentTab) < 0 ) {
+    if (
+      localStorage.getItem("isExperiencedUser") &&
+      ["3", "1"].indexOf(currentTab) < 0
+    ) {
       setAskLocation(true);
     }
   }, [currentTab]);
@@ -53,7 +55,11 @@ const App = () => {
             <Suspense
               fallback={<CenteredSpinner text="We are fetching you data.." />}
             >
-              <Feed query={query} setCurrentTab={setCurrentTab} askLocation={askLocation} />
+              <Feed
+                query={query}
+                setCurrentTab={setCurrentTab}
+                askLocation={askLocation}
+              />
             </Suspense>
           </TabPane>
           <TabPane tab="Tweets" key="2">
