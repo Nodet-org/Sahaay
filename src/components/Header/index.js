@@ -12,38 +12,40 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setTweets([]);
-    setLoading(true);
-    console.log("here");
-    let query = {
-      cityOrPincode: search,
-      resource: searchSelect,
-      verified: verified,
-    };
-
-    const response = await (
-      await fetch(`${API_URL}/api/scrape`, {
-        method: "post",
-        body: JSON.stringify(query),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-    console.log(response);
-    if (response.success) {
-      query = {
-        city: response.city,
+    if (search) {
+      setTweets([]);
+      setLoading(true);
+      let query = {
+        cityOrPincode: search,
         resource: searchSelect,
         verified: verified,
       };
-      message.success("Loaded tweets");
-      setQuery(query);
-      setTweets(response?.tweets);
-      setLink(response?.link);
+
+      const response = await (
+        await fetch(`${API_URL}/api/scrape`, {
+          method: "post",
+          body: JSON.stringify(query),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+      console.log(response);
+      if (response.success) {
+        query = {
+          city: response.city,
+          resource: searchSelect,
+          verified: verified,
+        };
+        message.success("Loaded tweets", 3);
+        setQuery(query);
+        setTweets(response?.tweets);
+        setLink(response?.link);
+      }
+      setLoading(false);
+    } else {
+      message.error(`Enter a City/Pincode to search for ${searchSelect}`, 3);
     }
-    setLoading(false);
   };
 
   return (
@@ -51,11 +53,8 @@ const Header = ({ setTweets, setLink, setQuery }) => {
       <div className="flex items-center justify-center mx-5 my-2">
         <div className="font-semibold text-2xl">Sahaay</div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <Form onFinish={handleSubmit} id="searchForm">
         <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
-          <label htmlFor="search" className="hidden">
-            Search
-          </label>
           <input
             type="text"
             id="search"
@@ -63,6 +62,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none flex-1"
             placeholder="Search by Pincode/City"
+            onKeyUp={(e) => e.key === "Enter" && handleSubmit()}
           />
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
@@ -98,15 +98,16 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             />
           </Form.Item>
           <Button
-            type="submit"
-            className="cursor-pointer py-2 px-4 flex-1 w-full bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
+            className="cursor-pointer flex items-center justify-center py-2 px-4 flex-1 w-full bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
             size="large"
             loading={loading}
+            form="searchForm"
+            onClick={() => handleSubmit()}
           >
             Search
           </Button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 };

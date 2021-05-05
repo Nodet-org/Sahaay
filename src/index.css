@@ -107,3 +107,11 @@ ul {
   background-color: #08415c;
   border: #08415c;
 }
+
+.ant-message-custom-content {
+  @apply flex items-center;
+}
+
+.ant-btn-loading-icon span {
+  @apply flex items-center;
+}
