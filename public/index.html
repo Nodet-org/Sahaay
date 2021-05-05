@@ -4,14 +4,48 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="COVID19 Resources" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta name="theme-color" content="#08415C" />
+    <meta
+      name="description"
+      content="A webapp for helping people in India to find the resources required such as Oxygen, Beds, Ventilators, etc. during this COVID-19 pandemic"
+    />
+    <meta name="og:title" content="Sahaay - A helping hand for the in need" />
+    <meta
+      name="og:description"
+      content="A webapp for helping people in India to find the resources required such as Oxygen, Beds, Ventilators, etc. during this COVID-19 pandemic"
+    />
+    <meta name="og:image" content="%PUBLIC_URL%/logo.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>COVID19 Resources</title>
+    <title>Sahaay - A helping hand for the in need</title>
   </head>
   <body style="background-color: #f8f0fb">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyCnLpp966sDw68fDrzID5knoOpW8L7g-lA",
+        authDomain: "resource-covid.firebaseapp.com",
+        databaseURL:
+          "https://resource-covid-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "resource-covid",
+        storageBucket: "resource-covid.appspot.com",
+        messagingSenderId: "642854737017",
+        appId: "1:642854737017:web:05f037104fbd9e7f30b0a8",
+        measurementId: "G-9MQHCT81HD",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
   </body>
 </html>

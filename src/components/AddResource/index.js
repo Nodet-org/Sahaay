@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, message } from "antd";
+import { Modal, Form, Input, Select, message, Button } from "antd";
 
 import { db } from "../../utils/firebase";
 
@@ -11,6 +11,7 @@ const AddResource = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selected, setSelected] = useState("oxygen");
   const [scrollY, setScrollY] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -55,6 +56,7 @@ const AddResource = () => {
   };
 
   const handleSubmit = async (value) => {
+    setLoading(true);
     try {
       const city = await getCity(value.city);
       const dbref = await db.ref(`feed/${city}/${selected}`).push();
@@ -73,8 +75,10 @@ const AddResource = () => {
       message.success(
         "Added Resource successfully! Thank you for your valuable contribution"
       );
+      setLoading(false);
       setIsModalVisible(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
       message.error(err);
     }
@@ -226,12 +230,20 @@ const AddResource = () => {
             >
               <Input />
             </Form.Item>
-            <Input
+            {/* <Input
               type="submit"
               value="Add Resource"
               className="bg-theme-color text-white font-semibold cursor-pointer"
               size="large"
-            />
+            /> */}
+            <Button
+              htmlType="submit"
+              className="bg-theme-color text-white font-semibold cursor-pointer"
+              style={{ width: "100%" }}
+              loading={loading}
+            >
+              Add Resource
+            </Button>
           </Form>
         </Modal>
       </div>
