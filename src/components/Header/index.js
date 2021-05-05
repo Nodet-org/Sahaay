@@ -1,8 +1,6 @@
-import { Checkbox, Form, Select } from "antd";
+import { Checkbox, Form, message, Select, Button } from "antd";
 import { useState } from "react";
-import axios from "axios";
 
-import { db } from "../../utils/firebase";
 import { API_URL } from "../../utils/constants";
 
 const { Option } = Select;
@@ -11,10 +9,13 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [search, setSearch] = useState("");
   const [searchSelect, setSearchSelect] = useState("oxygen");
   const [verified, setVerified] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    setTweets([]);
     e.preventDefault();
+    setTweets([]);
+    setLoading(true);
+    console.log("here");
     let query = {
       cityOrPincode: search,
       resource: searchSelect,
@@ -37,10 +38,12 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         resource: searchSelect,
         verified: verified,
       };
+      message.success("Loaded tweets");
       setQuery(query);
       setTweets(response?.tweets);
       setLink(response?.link);
     }
+    setLoading(false);
   };
 
   return (
@@ -94,11 +97,14 @@ const Header = ({ setTweets, setLink, setQuery }) => {
               id="verified"
             />
           </Form.Item>
-          <input
+          <Button
             type="submit"
-            value="Search"
-            className="cursor-pointer py-2 px-4 flex-1 w-full bg-theme-color text-white rounded"
-          />
+            className="cursor-pointer py-2 px-4 flex-1 w-full bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
+            size="large"
+            loading={loading}
+          >
+            Search
+          </Button>
         </div>
       </form>
     </div>
