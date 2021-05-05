@@ -1,17 +1,15 @@
 # COVID19 Resources
 
-<br />
-
 ## UI
 
 * [Repo](https://github.com/No-det/covid19-resources/)
 
-* [Website](https://resource-covid.web.app/)
+* [Website](https://sahaay.xyz/)
 
 <br />
 
-## Server
+## API
 
 * [Repo](https://github.com/No-det/covid19-resources-api/)
 
-* [Website](https://resource-covid.web.app/)
+* [Website](http://covid-resource.azurewebsites.net/)

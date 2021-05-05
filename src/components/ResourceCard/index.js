@@ -7,6 +7,7 @@ import phoneLightIcon from "../../assets/phoneLight.svg";
 import closeIcon from "../../assets/close.svg";
 import personIcon from "../../assets/person.svg";
 import phoneIcon from "../../assets/phone.svg";
+import whatsappIcon from "../../assets/whatsapp.svg";
 import timeIcon from "../../assets/time.svg";
 import dateIcon from "../../assets/date.svg";
 import emailIcon from "../../assets/email.svg";
@@ -117,13 +118,22 @@ const ResourceCard = (props) => {
           </tr>
         </table>
       </div>
-      <a
-        className="w-full bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
-        href={`tel:${props.post.phone}`}
-      >
-        <img src={phoneLightIcon} className="pr-5 text-white" alt="call" />
-        <span className="text-white font-bold">Call Now</span>
-      </a>
+      <div className="flex justify-between">
+        <a
+          className="w-full bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
+          href={`tel:${props.post.phone}`}
+        >
+          <img src={phoneLightIcon} className="pr-5 text-white" alt="call" />
+          <span className="text-white font-bold">Call Now</span>
+        </a>
+        {/* <a
+          className="w-1/2 bg-green-500 flex items-center justify-center rounded-md h-10 my-5 ml-2"
+          href={`https://api.whatsapp.com/send/?phone=91${props.post.phone}&text&app_absent=0`}
+        >
+          <img src={whatsappIcon} height={40} width={40} className="pr-4 text-white" alt="call" />
+          <span className="text-white font-bold">Send Message</span>
+        </a> */}
+      </div>
       <button
         onClick={handleReportResource}
         className={
