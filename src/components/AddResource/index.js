@@ -240,6 +240,7 @@ const AddResource = () => {
               htmlType="submit"
               className="bg-theme-color text-white font-semibold cursor-pointer"
               style={{ width: "100%" }}
+              size="large"
               loading={loading}
             >
               Add Resource

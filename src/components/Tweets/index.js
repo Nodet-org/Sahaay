@@ -1,17 +1,21 @@
+import { Button } from "antd";
 import { useEffect, useState } from "react";
 import { Tweet } from "react-twitter-widgets";
 
 const Tweets = ({ tweets, link, currentTab }) => {
-  const [limit, setLimit] = useState(9);
+  const [limit, setLimit] = useState(10);
   const [toggleShow, setToggleShow] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (tweets?.length !== 0) {
+      setLoading(true);
       if (limit + 10 > tweets?.length) {
         setLimit(tweets?.length);
       } else {
         setLimit((prev) => prev + 10);
       }
+      setLoading(false);
     }
   }, [toggleShow]);
 
@@ -44,12 +48,14 @@ const Tweets = ({ tweets, link, currentTab }) => {
             </div>
           ))}
         {tweets && limit < tweets.length && (
-          <button
+          <Button
             onClick={() => setToggleShow((prev) => !prev)}
-            className="py-2 px-4 bg-theme-color text-white rounded font-bold text-base"
+            className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
+            loading={loading}
+            size="large"
           >
             Load More tweets
-          </button>
+          </Button>
         )}
       </div>
     </div>
