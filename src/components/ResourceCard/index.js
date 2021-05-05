@@ -16,36 +16,43 @@ import { getIcon } from "../../utils/helpers";
 
 const ResourceCard = (props) => {
   const [isReported, setIsReported] = useState(false);
+  const [reports, setReports] = useState();
 
   const handleReportResource = async () => {
     if (localStorage.getItem(`isReported_${props.post.id}`)) {
       message.error(
         "You've already reported the unavailibilty of this resource !"
       );
-      localStorage.setItem(`isReported_${props.post.id}`, true);
+      // localStorage.setItem(`isReported_${props.post.id}`, true);
     } else {
       message.success("Resoure reported as unavailable !");
       localStorage.setItem(`isReported_${props.post.id}`, true);
-      let updatedData = {};
+      let updatedData;
       const dbref = db.ref(
         `feed/${props.location.toLowerCase()}/${props.resource}/${
           props.post.id
-        }`
+        }/reports`
       );
-      dbref.on("value", (data) => {
+      await dbref.once("value", (data) => {
         if (data.exists())
           if (data.val()) {
-            updatedData = { ...data.val() };
-            updatedData.reports += 1;
+            updatedData = data.val() + 1;
           }
       });
-      await dbref.set(updatedData);
+      setReports(updatedData);
+      dbref.set(updatedData);
+      // console.log(updatedData);
+      // dbref.set(updatedData);
     }
   };
 
   useEffect(() => {
     setIsReported(localStorage.getItem(`isReported_${props.post.id}`));
   }, [localStorage.getItem(`isReported_${props.post.id}`)]);
+
+  useEffect(() => {
+    setReports(props?.post.reports);
+  }, []);
 
   return (
     <Modal
@@ -140,7 +147,7 @@ const ResourceCard = (props) => {
         </span>
       </button>
       <p className="text-center pt-2">
-        {props.post.reports} people reported as resource is unavailable
+        {reports} people reported as resource is unavailable
       </p>
     </Modal>
   );
