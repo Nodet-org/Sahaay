@@ -1,6 +1,6 @@
 {
   "short_name": "Sahaay",
-  "name": "Sahaay",
+  "name": "Sahaay - A helping hand for the destitute",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,7 +10,8 @@
     {
       "src": "logo.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo.png",
