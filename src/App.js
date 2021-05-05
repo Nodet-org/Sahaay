@@ -49,7 +49,7 @@ const App = () => {
           size="large"
           centered
         >
-          <TabPane tab="Feed" key="1">
+          <TabPane tab="Resource" key="1">
             <Suspense
               fallback={<CenteredSpinner text="We are fetching you data.." />}
             >

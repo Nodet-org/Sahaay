@@ -34,6 +34,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
     } else if (city) {
       fetchCityData();
     }
+    // react-hooks/exhaustive-deps
   }, [query, city]);
 
   const fetchCityData = async () => {
@@ -78,7 +79,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
     return loading ? (
       <CenteredSpinner text="Hold on fetching you data.." />
     ) : (
-      <p className="text-center...">Search to get feeds</p>
+      <p className="text-center">Search to get feeds</p>
     );
 
   return (

@@ -1,10 +1,11 @@
 import { Button } from "antd";
 import { useEffect, useState } from "react";
-import { Tweet } from "react-twitter-widgets";
+import TweetCard from "../TweetCard";
 
 const Tweets = ({ tweets, link, currentTab }) => {
   const [limit, setLimit] = useState(10);
   const [toggleShow, setToggleShow] = useState(true);
+  const [tweetsList, setTweetsList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,14 +20,17 @@ const Tweets = ({ tweets, link, currentTab }) => {
     }
   }, [toggleShow]);
 
-  if (!link) return <p className="text-center my-4">Search to fetch tweets</p>;
+  if (!link)
+    return <p className="text-center my-4 w-full">Search to fetch tweets</p>;
   return (
     <div className="mx-5">
       <div className="w-full flex flex-col items-center">
         {link && (
           <div className="mb-4 flex flex-col items-center">
             {tweets?.length === 0 && (
-              <p className="my-4 font-bold text-lg">Fetching tweets...</p>
+              <p className="my-4 font-bold text-lg text-center">
+                Fetching tweets...
+              </p>
             )}
             <a
               href={link}
@@ -38,16 +42,19 @@ const Tweets = ({ tweets, link, currentTab }) => {
             </a>
           </div>
         )}
-        {tweets &&
-          tweets.slice(0, limit).map((tweet, i) => (
+        {tweets && tweets.length > 0 ? (
+          tweets.map((tweet, i) => (
             <div
               className="w-full flex justify-center my-4 tweetWrapper"
               key={i}
             >
-              <Tweet tweetId={tweet} />
+              <TweetCard tweetId={tweet} />
             </div>
-          ))}
-        {tweets && limit < tweets.length && (
+          ))
+        ) : (
+          <div className="my-4 font-bold text-lg">Fetching Tweets...</div>
+        )}
+        {tweetsList?.length > 0 && tweets && limit < tweets.length && (
           <Button
             onClick={() => setToggleShow((prev) => !prev)}
             className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"

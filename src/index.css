@@ -116,3 +116,8 @@ ul {
 .ant-btn-loading-icon span {
   @apply flex items-center;
 }
+
+.ant-tabs-tab {
+  width: 70px;
+  justify-content: center;
+}
