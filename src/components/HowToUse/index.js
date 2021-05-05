@@ -55,9 +55,9 @@ const HowToUse = () => {
         <h2 className="text-xl font-bold underline">If you have something</h2>
         <ul>
           <li className="mx-4 py-1 px-2 text-base">
-            In the bottom right corner of the page there is a green button with
-            a "+" sign, click on that and a modal will open up. Enter the
-            details according and post it
+            In the bottom right corner of the page there is a button with a "+"
+            sign, click on that and a modal will open up. Enter the details
+            accordingly and post it
           </li>
         </ul>
       </div>
@@ -119,7 +119,7 @@ const HowToUse = () => {
         </ul>
         <div className="flex flex-col items-center my-4 text-lg">
           <a
-            href="https://github.com/No-det/"
+            href="https://github.com/Nodet-org/Sahaay"
             rel="noopener noreferrer"
             target="_blank"
             className="text-theme-color font-bold"

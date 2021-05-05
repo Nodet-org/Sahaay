@@ -51,7 +51,9 @@ const Tweets = ({ tweets, link, currentTab }) => {
             </div>
           ))
         ) : (
-          <div className="my-4 font-bold text-lg">Fetching Tweets...</div>
+          <div className="my-4 font-bold text-lg">
+            No tweets found. Try clicking the link
+          </div>
         )}
         {tweets && limit < tweets.length && (
           <Button
