@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect, useState } from "react";
-import axios from "axios";
-import { Tabs } from "antd";
+import { Tabs, message } from "antd";
 import CenteredSpinner from "./components/CenteredSpinner";
 import Header from "./components/Header";
 import AddResource from "./components/AddResource";
@@ -19,25 +18,24 @@ const { TabPane } = Tabs;
 const App = () => {
   const [tweets, setTweets] = useState([]);
   const [link, setLink] = useState();
-  const [currentTab, setCurrentTab] = useState("1");
+  const [currentTab, setCurrentTab] = useState(null);
   const [query, setQuery] = useState({});
-  const [city, setCity] = useState();
+  const [askLocation, setAskLocation] = useState(false);
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        axios
-          .get(
-            `https://us1.locationiq.com/v1/reverse.php?key=80c6277b4fd80d&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`
-          )
-          .then(function (response) {
-            setCity(response.data.address.state.toLowerCase());
-          });
-      });
+    if (!localStorage.getItem("isExperiencedUser")) {
+      setCurrentTab("3");
+      localStorage.setItem("isExperiencedUser", true);
     } else {
-      console.log("Location fetching not suppprted");
+      setCurrentTab("1");
     }
   }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("isExperiencedUser") && ["3", "1"].indexOf(currentTab) < 0 ) {
+      setAskLocation(true);
+    }
+  }, [currentTab]);
 
   return (
     <Suspense fallback={<CenteredSpinner text="Hold on.." />}>
@@ -55,7 +53,7 @@ const App = () => {
             <Suspense
               fallback={<CenteredSpinner text="We are fetching you data.." />}
             >
-              <Feed query={query} setCurrentTab={setCurrentTab} city={city} />
+              <Feed query={query} setCurrentTab={setCurrentTab} askLocation={askLocation} />
             </Suspense>
           </TabPane>
           <TabPane tab="Tweets" key="2">

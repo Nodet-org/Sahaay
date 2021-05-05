@@ -1,16 +1,34 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 import { db } from "../../utils/firebase";
 
 import Card from "../Card";
 import CenteredSpinner from "../CenteredSpinner";
+import { message } from "antd";
 
-const Feed = ({ query, setCurrentTab, city }) => {
+const Feed = ({ query, setCurrentTab, askLocation }) => {
   const [feed, setFeed] = useState([]);
   const [resource, setResource] = useState();
   const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState();
 
   useEffect(() => {
+    if (askLocation) {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          axios
+            .get(
+              `https://us1.locationiq.com/v1/reverse.php?key=80c6277b4fd80d&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`
+            )
+            .then(function (response) {
+              setCity(response.data.address.state.toLowerCase());
+            });
+        });
+      } else {
+        message.error("Location fetching not suppprted");
+      }
+    }
     if (query.city) {
       fetchFromDB();
     } else if (city) {
