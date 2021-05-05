@@ -1,6 +1,6 @@
 import { Spin } from "antd";
 
-export default ({ text }) => {
+const CenteredSpinner = ({ text }) => {
   return (
     <div
       style={{
@@ -15,3 +15,5 @@ export default ({ text }) => {
     </div>
   );
 };
+
+export default CenteredSpinner;

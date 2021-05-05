@@ -68,6 +68,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             className="bg-transparent outline-none flex-1"
             placeholder="Search by Pincode/City"
             onKeyUp={(e) => e.key === "Enter" && handleSubmit()}
+            autoComplete="off"
           />
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
