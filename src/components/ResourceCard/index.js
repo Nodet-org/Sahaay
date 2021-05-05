@@ -64,54 +64,76 @@ const ResourceCard = (props) => {
     >
       <div className="flex items-center">
         {/* <img src={() => getIcon(props.resource)} alt="icon" /> */}
-        {getIcon(props.resource, 50)}
-        <p className="text-2xl pl-5">{props.resource.toUpperCase()}</p>
+        {getIcon(props.resource, 36)}
+        <p className="text-xl pl-5">{props.resource.toUpperCase()}</p>
       </div>
       <div className="flex items-center justify-center text-base my-6">
         <table className="border-collapse">
           <tr>
-            <td>
+            <td className="hidden sm:flex items-center justify-center">
               <img src={personIcon} alt="name" />
             </td>
-            <td className="font-semibold px-4">Name</td>
-            <td>: &nbsp; {props.post.name}</td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Name
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
+              : &nbsp; {props.post.name}
+            </td>
           </tr>
           <tr>
-            <td>
+            <td className="hidden sm:flex items-center justify-center">
               <img src={phoneIcon} alt="phone" />
             </td>
-            <td className="font-semibold px-4">Phone</td>
-            <td>: &nbsp; {props.post.phone}</td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Phone
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
+              : &nbsp; {props.post.phone}
+            </td>
           </tr>
           {props.post.email && (
             <tr>
-              <td>
+              <td className="hidden sm:flex items-center justify-center">
                 <img src={emailIcon} alt="email" />
               </td>
-              <td className="font-semibold px-4">Email</td>
-              <td>: &nbsp; {props.post.email}</td>
+              <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+                Email
+              </td>
+              <td className="text-sm sm:text-base font-semibold sm:px-4">
+                : &nbsp; {props.post.email}
+              </td>
             </tr>
           )}
           <tr>
-            <td>
+            <td className="hidden sm:flex items-center justify-center">
               <img src={dateIcon} alt="date" />
             </td>
-            <td className="font-semibold px-4">Posted At</td>
-            <td>: &nbsp; {props.post.date}</td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Posted At
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
+              : &nbsp; {props.post.date}
+            </td>
           </tr>
           <tr>
-            <td>
+            <td className="hidden sm:flex items-center justify-center">
               <img src={timeIcon} alt="time" />
             </td>
-            <td className="font-semibold px-4">Time</td>
-            <td>: &nbsp; {props.post.time}</td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Time
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
+              : &nbsp; {props.post.time}
+            </td>
           </tr>
           <tr>
-            <td>
+            <td className="hidden sm:flex items-center justify-center">
               <img src={priceIcon} alt="price" />
             </td>
-            <td className="font-semibold px-4">Price</td>
-            <td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Price
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
               : &nbsp; {props.post.price === "0" ? "Free" : props.post.price}
             </td>
           </tr>
