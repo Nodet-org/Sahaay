@@ -21,28 +21,33 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         verified: verified,
       };
 
-      const response = await (
-        await fetch(`${API_URL}/api/scrape`, {
-          method: "post",
-          body: JSON.stringify(query),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-      ).json();
-      console.log(response);
-      if (response.success) {
-        query = {
-          city: response.city,
-          resource: searchSelect,
-          verified: verified,
-        };
-        message.success("Loaded tweets", 3);
-        setQuery(query);
-        setTweets(response?.tweets);
-        setLink(response?.link);
+      try {
+        const response = await (
+          await fetch(`${API_URL}/api/scrape`, {
+            method: "post",
+            body: JSON.stringify(query),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+        ).json();
+        console.log(response);
+        if (response.success) {
+          query = {
+            city: response.city,
+            resource: searchSelect,
+            verified: verified,
+          };
+          message.success("Loaded tweets", 3);
+          setQuery(query);
+          setTweets(response?.tweets);
+          setLink(response?.link);
+        }
+        setLoading(false);
+      } catch (error) {
+        message.error(error.toString());
+        setLoading(false);
       }
-      setLoading(false);
     } else {
       message.error(`Enter a City/Pincode to search for ${searchSelect}`, 3);
     }

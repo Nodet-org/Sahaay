@@ -8,6 +8,7 @@ import CenteredSpinner from "../CenteredSpinner";
 const Feed = ({ query, setCurrentTab, city }) => {
   const [feed, setFeed] = useState([]);
   const [resource, setResource] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (query.city) {
@@ -18,6 +19,7 @@ const Feed = ({ query, setCurrentTab, city }) => {
   }, [query, city]);
 
   const fetchCityData = async () => {
+    setLoading(true);
     const dbref = db.ref(`feed/${city}`);
     await dbref.once("value", (snapshot) => {
       if (snapshot.exists()) {
@@ -39,6 +41,7 @@ const Feed = ({ query, setCurrentTab, city }) => {
         setFeed([]);
       }
     });
+    setLoading(false);
   };
 
   const fetchFromDB = async () => {
@@ -54,7 +57,11 @@ const Feed = ({ query, setCurrentTab, city }) => {
   };
 
   if (Object.keys(query).length === 0 && feed.length === 0)
-    return <CenteredSpinner text="Hold on fetching you data.." />;
+    return loading ? (
+      <CenteredSpinner text="Hold on fetching you data.." />
+    ) : (
+      <p className="text-center...">Search to get feeds</p>
+    );
 
   return (
     <div className="flex flex-col items-center feedContainer">
