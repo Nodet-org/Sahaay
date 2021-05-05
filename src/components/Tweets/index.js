@@ -1,32 +1,35 @@
 import { Button } from "antd";
 import { useEffect, useState } from "react";
-import { Tweet } from "react-twitter-widgets";
+import TweetCard from "../TweetCard";
 
 const Tweets = ({ tweets, link, currentTab }) => {
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(0);
   const [toggleShow, setToggleShow] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (tweets?.length !== 0) {
       setLoading(true);
-      if (limit + 10 > tweets?.length) {
+      if (limit + 5 > tweets?.length) {
         setLimit(tweets?.length);
       } else {
-        setLimit((prev) => prev + 10);
+        setLimit((prev) => prev + 5);
       }
       setLoading(false);
     }
   }, [toggleShow]);
 
-  if (!link) return <p className="text-center my-4">Search to fetch tweets</p>;
+  if (!link)
+    return <p className="text-center my-4 w-full">Search to fetch tweets</p>;
   return (
     <div className="mx-5">
       <div className="w-full flex flex-col items-center">
         {link && (
           <div className="mb-4 flex flex-col items-center">
             {tweets?.length === 0 && (
-              <p className="my-4 font-bold text-lg">Fetching tweets...</p>
+              <p className="my-4 font-bold text-lg text-center">
+                Fetching tweets...
+              </p>
             )}
             <a
               href={link}
@@ -38,15 +41,20 @@ const Tweets = ({ tweets, link, currentTab }) => {
             </a>
           </div>
         )}
-        {tweets &&
+        {tweets && tweets.length > 0 ? (
           tweets.slice(0, limit).map((tweet, i) => (
             <div
               className="w-full flex justify-center my-4 tweetWrapper"
               key={i}
             >
-              <Tweet tweetId={tweet} />
+              <TweetCard tweetId={tweet} />
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="my-4 font-bold text-lg">
+            No tweets found. Try clicking the link
+          </div>
+        )}
         {tweets && limit < tweets.length && (
           <Button
             onClick={() => setToggleShow((prev) => !prev)}

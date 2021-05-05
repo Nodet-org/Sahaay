@@ -3,6 +3,8 @@ import { useState } from "react";
 
 import { API_URL } from "../../utils/constants";
 
+import logo from "../../assets/logo.svg";
+
 const { Option } = Select;
 
 const Header = ({ setTweets, setLink, setQuery }) => {
@@ -56,7 +58,16 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   return (
     <div className="flex flex-col py-4">
       <div className="flex items-center justify-center mx-5 my-2">
-        <div className="font-semibold text-2xl">Sahaay</div>
+        <div className="flex justify-center items-center">
+          <img
+            src={logo}
+            alt="Helping hand"
+            height="56"
+            width="56"
+            className="h-14 w-14 pr-4"
+          />
+          <p className="font-semibold text-2xl">Sahaay</p>
+        </div>
       </div>
       <Form onFinish={handleSubmit} id="searchForm">
         <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
@@ -68,6 +79,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             className="bg-transparent outline-none flex-1"
             placeholder="Search by Pincode/City"
             onKeyUp={(e) => e.key === "Enter" && handleSubmit()}
+            autoComplete="off"
           />
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">

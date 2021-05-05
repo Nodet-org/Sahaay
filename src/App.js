@@ -1,43 +1,43 @@
 import React, { Suspense, useEffect, useState } from "react";
-import axios from "axios";
 import { Tabs } from "antd";
+import ReactGA from "react-ga";
+
 import CenteredSpinner from "./components/CenteredSpinner";
 import Header from "./components/Header";
 import AddResource from "./components/AddResource";
 import Footer from "./components/Footer";
 import HowToUse from "./components/HowToUse";
 
-// const Header = React.lazy(() => import("./components/Header"));
-// const Footer = React.lazy(() => import("./components/Footer"));
-// const AddResource = React.lazy(() => import("./components/AddResource"));
 const Feed = React.lazy(() => import("./components/Feed"));
 const Tweets = React.lazy(() => import("./components/Tweets"));
-// const HowToUse = React.lazy(() => import("./components/HowToUse"));
 
 const { TabPane } = Tabs;
 
 const App = () => {
   const [tweets, setTweets] = useState([]);
   const [link, setLink] = useState();
-  const [currentTab, setCurrentTab] = useState("1");
+  const [currentTab, setCurrentTab] = useState(null);
   const [query, setQuery] = useState({});
-  const [city, setCity] = useState();
+  const [askLocation, setAskLocation] = useState(false);
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        axios
-          .get(
-            `https://us1.locationiq.com/v1/reverse.php?key=80c6277b4fd80d&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`
-          )
-          .then(function (response) {
-            setCity(response.data.address.state.toLowerCase());
-          });
-      });
+    ReactGA.initialize("G-9MQHCT81HD");
+    if (!localStorage.getItem("isExperiencedUser")) {
+      setCurrentTab("3");
+      localStorage.setItem("isExperiencedUser", true);
     } else {
-      console.log("Location fetching not suppprted");
+      setCurrentTab("1");
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("isExperiencedUser") &&
+      ["3", "1"].indexOf(currentTab) < 0
+    ) {
+      setAskLocation(true);
+    }
+  }, [currentTab]);
 
   return (
     <Suspense fallback={<CenteredSpinner text="Hold on.." />}>
@@ -51,11 +51,15 @@ const App = () => {
           size="large"
           centered
         >
-          <TabPane tab="Feed" key="1">
+          <TabPane tab="Resource" key="1">
             <Suspense
               fallback={<CenteredSpinner text="We are fetching you data.." />}
             >
-              <Feed query={query} setCurrentTab={setCurrentTab} city={city} />
+              <Feed
+                query={query}
+                setCurrentTab={setCurrentTab}
+                askLocation={askLocation}
+              />
             </Suspense>
           </TabPane>
           <TabPane tab="Tweets" key="2">

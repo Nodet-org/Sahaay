@@ -8,7 +8,7 @@ import test from "../assets/test.svg";
 import ventilator from "../assets/ventilator.svg";
 
 export const getIcon = (resource, size) => {
-    let iconStyle = `w-${size} h-${size} mr-2`, icon = medicine;
+    let icon = medicine;
     if (resource === "oxygen") icon = oxygenTank;
     else if (resource === "bed") icon = hospitalBed;
     else if (resource === "icu") icon = hospitalBed;
@@ -18,5 +18,5 @@ export const getIcon = (resource, size) => {
     else if (resource === "plasma") icon = blood;
     else if (resource === "food") icon = food;
     else if (resource === "ambulance") icon = ambulance;
-    return <img src={icon} height={size} width={size} alt="Medicine" className="mr-1" alt={resource.toUpperCase()} />;
+    return <img src={icon} height={size} width={size} className="mr-1" alt={resource.toUpperCase()} />;
 }
