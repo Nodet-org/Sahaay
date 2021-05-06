@@ -80,7 +80,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
       .then(function (response) {
         // handle success
         if (response.data) {
-          console.log(response.data);
           const newSearch = response.data.map((loc) => ({
             name: [
               loc.address.name,
@@ -107,7 +106,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   };
 
   const debounceSearch = useCallback(
-    debounce((place) => getLocation(place), 500),
+    debounce((place) => getLocation(place), 200),
     []
   );
 
