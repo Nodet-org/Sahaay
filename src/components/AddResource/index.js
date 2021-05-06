@@ -110,7 +110,11 @@ const AddResource = () => {
         // handle success
         if (response.data) {
           const newSearch = response.data.map((loc) => ({
-            name: loc.display_name,
+            name: [
+              loc.address.name,
+              loc.address.state,
+              loc.address.country,
+            ].join(", "),
             search: loc.display_place,
             lat: loc.lat,
             lon: loc.lon,
@@ -217,6 +221,45 @@ const AddResource = () => {
               </Select>
             </Form.Item>
             <Form.Item
+              label="City"
+              requiredMark={false}
+              name="city"
+              tooltip={`Enter the city where ${selected} is available`}
+              rules={[
+                {
+                  required: true,
+                  message: `Please input the city where ${selected} is available`,
+                },
+              ]}
+            >
+              {/* <Input /> */}
+              <Select
+                labelInValue
+                value={value?.display_place}
+                showSearch
+                placeholder="Enter the location of availablity..."
+                notFoundContent={
+                  fetching ? <Spin size="small" /> : "Search for your location."
+                }
+                filterOption={false}
+                onSearch={onSearch}
+                onChange={onChange}
+                style={{ width: "100%" }}
+                suffixIcon={false}
+                className="customSelect"
+                size="medium"
+              >
+                {search?.map(
+                  (d, id) =>
+                    d.address.postcode && (
+                      <Option key={id} value={d.address.postcode}>
+                        {d.name}
+                      </Option>
+                    )
+                )}
+              </Select>
+            </Form.Item>
+            <Form.Item
               label="Name"
               requiredMark={false}
               name="name"
@@ -274,45 +317,6 @@ const AddResource = () => {
               ]}
             >
               <Input placeholder="The price of the resource (0 would be a kindful act!)." />
-            </Form.Item>
-            <Form.Item
-              label="City"
-              requiredMark={false}
-              name="city"
-              tooltip={`Enter the city where ${selected} is available`}
-              rules={[
-                {
-                  required: true,
-                  message: `Please input the city where ${selected} is available`,
-                },
-              ]}
-            >
-              {/* <Input /> */}
-              <Select
-                labelInValue
-                value={value?.display_place}
-                showSearch
-                placeholder="Enter the location of availablity..."
-                notFoundContent={
-                  fetching ? <Spin size="small" /> : "Search for your location."
-                }
-                filterOption={false}
-                onSearch={onSearch}
-                onChange={onChange}
-                style={{ width: "100%" }}
-                suffixIcon={false}
-                className="customSelect"
-                size="medium"
-              >
-                {search?.map(
-                  (d, id) =>
-                    d.address.postcode && (
-                      <Option key={id} value={d.address.postcode}>
-                        {d.name}
-                      </Option>
-                    )
-                )}
-              </Select>
             </Form.Item>
             <Button
               htmlType="submit"
