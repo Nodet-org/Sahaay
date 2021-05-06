@@ -1,4 +1,5 @@
-import { Checkbox, Form, message, Select, Button } from "antd";
+import { Checkbox, Form, message, Select, Button, Tooltip, Spin } from "antd";
+import axios from "axios";
 import { useState } from "react";
 
 import { API_URL } from "../../utils/constants";
@@ -8,17 +9,20 @@ import logo from "../../assets/logo.svg";
 const { Option } = Select;
 
 const Header = ({ setTweets, setLink, setQuery }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState([]);
   const [searchSelect, setSearchSelect] = useState("oxygen");
   const [verified, setVerified] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [value, setValue] = useState();
+  const [pin, setPin] = useState();
 
   const handleSubmit = async (e) => {
-    if (search) {
+    if (pin) {
       setTweets([]);
       setLoading(true);
       let query = {
-        cityOrPincode: search,
+        cityOrPincode: pin,
         resource: searchSelect,
         verified: verified,
       };
@@ -56,6 +60,55 @@ const Header = ({ setTweets, setLink, setQuery }) => {
     }
   };
 
+  // Location search
+  function onChange(value) {
+    // this.setState({ fetching: false, search: [], value: value });
+    setPin(value.value);
+    setFetching(false);
+    setSearch([]);
+    setValue(value);
+    // console.log("on change", value);
+  }
+
+  const onSearch = (value) => {
+    // console.log("fetching data", value);
+    setSearch([]);
+
+    if (value.length !== 0 && value.length % 2 === 0) {
+      setFetching(true);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          axios
+            .get(
+              `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&max_lon=${pos.coords.longitude}&max_lat=${pos.coords.latitude}&tag=place:city,place:town,place:village`
+            )
+            .then(function (response) {
+              // handle success
+              if (response.data) {
+                const newSearch = response.data.map((loc) => ({
+                  name: loc.display_name,
+                  search: loc.display_place,
+                  lat: loc.lat,
+                  lon: loc.lon,
+                  id: loc.place_id,
+                  address: loc.address,
+                }));
+                console.log(newSearch);
+                setSearch(newSearch);
+                setFetching(false);
+                setValue(newSearch);
+              }
+            })
+            .catch((err) => console.log(err.toString()));
+        });
+      } else {
+        console.log("not suppprted");
+        // x.innerHTML = "Geolocation is not supported by this browser.";
+        setFetching(false);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col py-4">
       <div className="flex items-center justify-center mx-5 my-2">
@@ -71,17 +124,34 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         </div>
       </div>
       <Form onFinish={handleSubmit} id="searchForm">
-        <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
-          <input
-            type="text"
-            id="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none flex-1"
-            placeholder="Search by Pincode/City"
-            onKeyUp={(e) => e.key === "Enter" && handleSubmit()}
-            autoComplete="off"
-          />
+        <div className="bg-white mx-5  h-9 flex items-center justify-between  my-4">
+          <Select
+            // mode="multiple"
+            labelInValue
+            value={value?.display_place}
+            // showArrow
+            showSearch
+            placeholder="Search...."
+            notFoundContent={
+              fetching ? <Spin size="small" /> : "Search for your location."
+            }
+            filterOption={false}
+            onSearch={onSearch}
+            onChange={onChange}
+            style={{ width: "100%" }}
+            suffixIcon={false}
+            className="customSelect"
+            size="large"
+          >
+            {search?.map(
+              (d, id) =>
+                d.address.postcode && (
+                  <Option key={id} value={d.address.postcode}>
+                    {d.name}
+                  </Option>
+                )
+            )}
+          </Select>
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
           <Select
