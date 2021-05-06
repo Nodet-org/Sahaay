@@ -76,36 +76,36 @@ const Header = ({ setTweets, setLink, setQuery }) => {
 
     if (value.length !== 0 && value.length % 2 === 0) {
       setFetching(true);
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-          axios
-            .get(
-              `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&max_lon=${pos.coords.longitude}&max_lat=${pos.coords.latitude}&tag=place:city,place:town,place:village`
-            )
-            .then(function (response) {
-              // handle success
-              if (response.data) {
-                const newSearch = response.data.map((loc) => ({
-                  name: loc.display_name,
-                  search: loc.display_place,
-                  lat: loc.lat,
-                  lon: loc.lon,
-                  id: loc.place_id,
-                  address: loc.address,
-                }));
-                console.log(newSearch);
-                setSearch(newSearch);
-                setFetching(false);
-                setValue(newSearch);
-              }
-            })
-            .catch((err) => console.log(err.toString()));
-        });
-      } else {
-        console.log("not suppprted");
-        // x.innerHTML = "Geolocation is not supported by this browser.";
-        setFetching(false);
-      }
+      // if (navigator.geolocation) {
+      // navigator.geolocation.getCurrentPosition((pos) => {
+      axios
+        .get(
+          `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&tag=place:city,place:town,place:village`
+        )
+        .then(function (response) {
+          // handle success
+          if (response.data) {
+            const newSearch = response.data.map((loc) => ({
+              name: loc.display_name,
+              search: loc.display_place,
+              lat: loc.lat,
+              lon: loc.lon,
+              id: loc.place_id,
+              address: loc.address,
+            }));
+            console.log(newSearch);
+            setSearch(newSearch);
+            setFetching(false);
+            setValue(newSearch);
+          }
+        })
+        .catch((err) => console.log(err.toString()));
+      // });
+      // } else {
+      // console.log("not suppprted");
+      // x.innerHTML = "Geolocation is not supported by this browser.";
+      // setFetching(false);
+      // }
     }
   };
 
