@@ -5,13 +5,30 @@ import { db } from "../../utils/firebase";
 
 import Card from "../Card";
 import CenteredSpinner from "../CenteredSpinner";
-import { message } from "antd";
+import { message, Button } from "antd";
 
 const Feed = ({ query, setCurrentTab, askLocation }) => {
   const [feed, setFeed] = useState([]);
   const [resource, setResource] = useState();
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useState();
+
+  const [limit, setLimit] = useState(5);
+  const [toggleShow, setToggleShow] = useState(true);
+  const [feedLoading, setFeedLoading] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(feed).length !== 0) {
+      setFeedLoading(true);
+      if (limit + 5 > Object.keys(feed).length) {
+        setLimit(Object.keys(feed).length);
+      } else {
+        setLimit((prev) => prev + 5);
+
+      }
+      setFeedLoading(false);
+    }
+  }, [toggleShow]);
 
   useEffect(() => {
     if (askLocation) {
@@ -85,7 +102,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
   return (
     <div className="flex flex-col items-center feedContainer">
       {Object.keys(feed).length > 0 ? (
-        Object.keys(feed).map((post) => (
+        Object.keys(feed).slice(0, limit).map((post) => (
           <Card
             post={feed[post]}
             resource={resource}
@@ -108,6 +125,16 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
           </span>
         </>
       )}
+      {feed && limit < Object.keys(feed).length && (
+          <Button
+            onClick={() => setToggleShow((prev) => !prev)}
+            className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
+            loading={feedLoading}
+            size="large"
+          >
+            Load More resources
+          </Button>
+        )}
     </div>
   );
 };

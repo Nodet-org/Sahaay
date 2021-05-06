@@ -72,7 +72,7 @@ const AddResource = () => {
         email: value.email || "",
         price: value.price,
         date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString(),
+        time: new Date().toLocaleTimeString("en-US"),
         reports: 0,
         id: dbref.key,
       };
@@ -260,6 +260,20 @@ const AddResource = () => {
               </Select>
             </Form.Item>
             <Form.Item
+              label="Price"
+              requiredMark={false}
+              name="price"
+              tooltip="Enter the price. Enter 0 if for free"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your price. If free enter 0",
+                },
+              ]}
+            >
+              <Input placeholder="The price of the resource (0 would be a kindful act!)." />
+            </Form.Item>
+            <Form.Item
               label="Name"
               requiredMark={false}
               name="name"
@@ -303,20 +317,6 @@ const AddResource = () => {
               ]}
             >
               <Input placeholder="Your email id" />
-            </Form.Item>
-            <Form.Item
-              label="Price"
-              requiredMark={false}
-              name="price"
-              tooltip="Enter the price. Enter 0 if for free"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your price. If free enter 0",
-                },
-              ]}
-            >
-              <Input placeholder="The price of the resource (0 would be a kindful act!)." />
             </Form.Item>
             <Button
               htmlType="submit"
