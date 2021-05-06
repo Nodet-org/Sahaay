@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, message, Button } from "antd";
+import { useState, useEffect, useCallback } from "react";
+import { Modal, Form, Input, Select, message, Button, Spin } from "antd";
+import axios from "axios";
+import debounce from "lodash/debounce";
 
 import { db } from "../../utils/firebase";
 
@@ -12,6 +14,10 @@ const AddResource = () => {
   const [selected, setSelected] = useState("oxygen");
   const [scrollY, setScrollY] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [value, setValue] = useState();
+  const [search, setSearch] = useState([]);
+  const [error, setError] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -33,15 +39,15 @@ const AddResource = () => {
     setIsModalVisible(true);
   };
 
-  const getCity = async (cityOrPincode) => {
+  const getCity = async ({ value: cityOrPincode }) => {
     let city = "";
-    if (!isNaN(parseInt(cityOrPincode))) {
+    if (!isNaN(+cityOrPincode)) {
       try {
         const response = await (
           await fetch("https://api.postalpincode.in/pincode/" + cityOrPincode)
         ).json();
         if (response[0].Status && response[0].PostOffice.length) {
-          city = response[0].PostOffice[0].Region;
+          city = response[0].PostOffice[0].District;
         } else {
           return { inValid: "pincode" };
         }
@@ -87,6 +93,59 @@ const AddResource = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  // Location search
+  function onChange(value) {
+    setFetching(false);
+    setSearch([]);
+    setValue(value.value);
+  }
+
+  const getLocation = (value) => {
+    axios
+      .get(
+        `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&tag=place:city,place:town,place:village`
+      )
+      .then(function (response) {
+        // handle success
+        if (response.data) {
+          const newSearch = response.data.map((loc) => ({
+            name: loc.display_name,
+            search: loc.display_place,
+            lat: loc.lat,
+            lon: loc.lon,
+            id: loc.place_id,
+            address: loc.address,
+          }));
+          // console.log(newSearch);
+          setSearch(newSearch);
+          setFetching(false);
+          setValue(newSearch);
+        }
+      })
+      .catch((err) => {
+        console.log(err.toString());
+        setFetching(false);
+        setError(true);
+      });
+  };
+
+  const debounceSearch = useCallback(
+    debounce((place) => getLocation(place), 500),
+    []
+  );
+
+  const onSearch = (value) => {
+    // console.log("fetching data", value);
+
+    if (value.length !== 0) {
+      setError(false);
+      setSearch([]);
+      setFetching(true);
+      debounceSearch(value);
+    }
+  };
+
   return (
     <>
       <div
@@ -169,7 +228,7 @@ const AddResource = () => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="Your Name" />
             </Form.Item>
             <Form.Item
               label="Phone"
@@ -183,7 +242,7 @@ const AddResource = () => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="Your number" />
             </Form.Item>
             <Form.Item
               label={[
@@ -200,7 +259,7 @@ const AddResource = () => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="Your email id" />
             </Form.Item>
             <Form.Item
               label="Price"
@@ -214,7 +273,7 @@ const AddResource = () => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="The price of the resource (0 would be a kindful act!)." />
             </Form.Item>
             <Form.Item
               label="City"
@@ -228,14 +287,33 @@ const AddResource = () => {
                 },
               ]}
             >
-              <Input />
+              {/* <Input /> */}
+              <Select
+                labelInValue
+                value={value?.display_place}
+                showSearch
+                placeholder="Enter the location of availablity..."
+                notFoundContent={
+                  fetching ? <Spin size="small" /> : "Search for your location."
+                }
+                filterOption={false}
+                onSearch={onSearch}
+                onChange={onChange}
+                style={{ width: "100%" }}
+                suffixIcon={false}
+                className="customSelect"
+                size="medium"
+              >
+                {search?.map(
+                  (d, id) =>
+                    d.address.postcode && (
+                      <Option key={id} value={d.address.postcode}>
+                        {d.name}
+                      </Option>
+                    )
+                )}
+              </Select>
             </Form.Item>
-            {/* <Input
-              type="submit"
-              value="Add Resource"
-              className="bg-theme-color text-white font-semibold cursor-pointer"
-              size="large"
-            /> */}
             <Button
               htmlType="submit"
               className="bg-theme-color text-white focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white rounded font-semibold cursor-pointer"

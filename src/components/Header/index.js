@@ -1,6 +1,7 @@
 import { Checkbox, Form, message, Select, Button, Tooltip, Spin } from "antd";
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import debounce from "lodash/debounce";
 
 import { API_URL } from "../../utils/constants";
 
@@ -16,6 +17,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [fetching, setFetching] = useState(false);
   const [value, setValue] = useState();
   const [pin, setPin] = useState();
+  const [error, setError] = useState(false);
 
   const handleSubmit = async (e) => {
     if (pin) {
@@ -70,36 +72,54 @@ const Header = ({ setTweets, setLink, setQuery }) => {
     // console.log("on change", value);
   }
 
+  const getLocation = (value) => {
+    axios
+      .get(
+        `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&normalizestate=1&tag=place:city,place:town,place:village`
+      )
+      .then(function (response) {
+        // handle success
+        if (response.data) {
+          const newSearch = response.data.map((loc) => ({
+            name: [
+              loc.address.name,
+              loc.address.state,
+              loc.address.country,
+            ].join(", "),
+            search: loc.display_place,
+            lat: loc.lat,
+            lon: loc.lon,
+            id: loc.place_id,
+            address: loc.address,
+          }));
+          // console.log(newSearch);
+          setSearch(newSearch);
+          setFetching(false);
+          setValue(newSearch);
+        }
+      })
+      .catch((err) => {
+        console.log(err.toString());
+        setFetching(false);
+        setError(true);
+      });
+  };
+
+  const debounceSearch = useCallback(
+    debounce((place) => getLocation(place), 200),
+    []
+  );
+
   const onSearch = (value) => {
     // console.log("fetching data", value);
-    setSearch([]);
 
-    if (value.length !== 0 && value.length % 2 === 0) {
+    if (value.length !== 0) {
+      setSearch([]);
       setFetching(true);
+      debounceSearch(value);
       // if (navigator.geolocation) {
       // navigator.geolocation.getCurrentPosition((pos) => {
-      axios
-        .get(
-          `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&tag=place:city,place:town,place:village`
-        )
-        .then(function (response) {
-          // handle success
-          if (response.data) {
-            const newSearch = response.data.map((loc) => ({
-              name: loc.display_name,
-              search: loc.display_place,
-              lat: loc.lat,
-              lon: loc.lon,
-              id: loc.place_id,
-              address: loc.address,
-            }));
-            console.log(newSearch);
-            setSearch(newSearch);
-            setFetching(false);
-            setValue(newSearch);
-          }
-        })
-        .catch((err) => console.log(err.toString()));
+
       // });
       // } else {
       // console.log("not suppprted");
@@ -131,9 +151,15 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             value={value?.display_place}
             // showArrow
             showSearch
-            placeholder="Search...."
+            placeholder="Search for your city..."
             notFoundContent={
-              fetching ? <Spin size="small" /> : "Search for your location."
+              fetching ? (
+                <Spin size="small" />
+              ) : error ? (
+                "No results found"
+              ) : (
+                "Search for your location."
+              )
             }
             filterOption={false}
             onSearch={onSearch}
@@ -145,7 +171,8 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           >
             {search?.map(
               (d, id) =>
-                d.address.postcode && (
+                d.address.postcode &&
+                d.address?.postcode?.length === 6 && (
                   <Option key={id} value={d.address.postcode}>
                     {d.name}
                   </Option>
