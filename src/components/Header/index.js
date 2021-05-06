@@ -44,12 +44,13 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           setQuery(query);
           setTweets(response?.tweets);
           setLink(response?.link);
-        }
-        setLoading(false);
+        } else if (response?.message) message.error(response.message);
       } catch (error) {
-        message.error(error.toString());
-        setLoading(false);
+        console.log(error);
+        if (error?.message) message.error(error.message);
+        else message.error(error.toString());
       }
+      setLoading(false);
     } else {
       message.error(`Enter a City/Pincode to search for ${searchSelect}`, 3);
     }
