@@ -16,7 +16,11 @@ const Footer = () => {
             Github
           </a>
         </p>
-        <a href="https://www.buymeacoffee.com/nodet.org" target="_blank">
+        <a
+          href="https://www.buymeacoffee.com/nodet.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <img
             src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
             alt="Buy Me A Coffee"

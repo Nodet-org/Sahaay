@@ -14,21 +14,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
   const [city, setCity] = useState();
 
   const [limit, setLimit] = useState(5);
-  const [toggleShow, setToggleShow] = useState(true);
   const [feedLoading, setFeedLoading] = useState(false);
-
-  useEffect(() => {
-    if (Object.keys(feed).length !== 0) {
-      setFeedLoading(true);
-      if (limit + 5 > Object.keys(feed).length) {
-        setLimit(Object.keys(feed).length);
-      } else {
-        setLimit((prev) => prev + 5);
-
-      }
-      setFeedLoading(false);
-    }
-  }, [toggleShow]);
 
   useEffect(() => {
     if (askLocation) {
@@ -69,7 +55,6 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
               newFeed = value || [];
             });
           });
-
           setResource(res);
           setFeed(newFeed);
         }
@@ -92,7 +77,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
     });
   };
 
-  if (Object.keys(query).length === 0 && feed.length === 0)
+  if (Object.keys(query).length === 0 && Object.keys(feed).length === 0)
     return loading ? (
       <CenteredSpinner text="Hold on fetching you data.." />
     ) : (
@@ -102,13 +87,17 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
   return (
     <div className="flex flex-col items-center feedContainer">
       {Object.keys(feed).length > 0 ? (
-        Object.keys(feed).slice(0, limit).map((post) => (
-          <Card
-            post={feed[post]}
-            resource={resource}
-            location={query.city || city}
-          />
-        ))
+        Object.keys(feed)
+          .reverse()
+          .slice(0, limit)
+          .map((post, i) => (
+            <Card
+              key={i}
+              post={feed[post]}
+              resource={resource}
+              location={query.city || city}
+            />
+          ))
       ) : (
         <>
           <p>
@@ -126,15 +115,19 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
         </>
       )}
       {feed && limit < Object.keys(feed).length && (
-          <Button
-            onClick={() => setToggleShow((prev) => !prev)}
-            className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
-            loading={feedLoading}
-            size="large"
-          >
-            Load More resources
-          </Button>
-        )}
+        <Button
+          onClick={() => {
+            setFeedLoading(true);
+            setLimit((prev) => prev + 5);
+            setFeedLoading(false);
+          }}
+          className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
+          loading={feedLoading}
+          size="large"
+        >
+          Load More resources
+        </Button>
+      )}
     </div>
   );
 };

@@ -71,8 +71,8 @@ const AddResource = () => {
         phone: value.phone,
         email: value.email || "",
         price: value.price,
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString("en-US"),
+        date: new Date().toLocaleDateString("en-IN"),
+        time: new Date().toLocaleTimeString("en-IN"),
         reports: 0,
         id: dbref.key,
       };
@@ -239,7 +239,13 @@ const AddResource = () => {
                 showSearch
                 placeholder="Enter the location of availablity..."
                 notFoundContent={
-                  fetching ? <Spin size="small" /> : "Search for your location."
+                  fetching ? (
+                    <Spin size="small" />
+                  ) : error ? (
+                    "No results found"
+                  ) : (
+                    "Search for your location."
+                  )
                 }
                 filterOption={false}
                 onSearch={onSearch}

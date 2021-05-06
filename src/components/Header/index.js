@@ -1,4 +1,4 @@
-import { Checkbox, Form, message, Select, Button, Tooltip, Spin } from "antd";
+import { Checkbox, Form, message, Select, Button, Spin } from "antd";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
@@ -39,7 +39,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             },
           })
         ).json();
-        console.log(response);
         if (response.success) {
           query = {
             city: response.city,
@@ -52,7 +51,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           setLink(response?.link);
         } else if (response?.message) message.error(response.message);
       } catch (error) {
-        console.log(error);
         if (error?.message) message.error(error.message);
         else message.error(error.toString());
       }
@@ -64,12 +62,10 @@ const Header = ({ setTweets, setLink, setQuery }) => {
 
   // Location search
   function onChange(value) {
-    // this.setState({ fetching: false, search: [], value: value });
     setPin(value.value);
     setFetching(false);
     setSearch([]);
     setValue(value);
-    // console.log("on change", value);
   }
 
   const getLocation = (value) => {
@@ -92,7 +88,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             id: loc.place_id,
             address: loc.address,
           }));
-          // console.log(newSearch);
           setSearch(newSearch);
           setFetching(false);
           setValue(newSearch);
@@ -111,8 +106,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   );
 
   const onSearch = (value) => {
-    // console.log("fetching data", value);
-
     if (value.length !== 0) {
       setSearch([]);
       setFetching(true);

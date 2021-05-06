@@ -64,7 +64,7 @@ const App = () => {
           </TabPane>
           <TabPane tab="Tweets" key="2">
             <Suspense fallback="Loading...">
-              <Tweets tweets={tweets} link={link} currentTab={currentTab} />
+              <Tweets tweets={tweets} link={link} />
             </Suspense>
           </TabPane>
           <TabPane tab="Help" key="3">

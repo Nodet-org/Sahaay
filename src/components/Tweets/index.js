@@ -1,23 +1,10 @@
 import { Button } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TweetCard from "../TweetCard";
 
-const Tweets = ({ tweets, link, currentTab }) => {
+const Tweets = ({ tweets, link }) => {
   const [limit, setLimit] = useState(5);
-  const [toggleShow, setToggleShow] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (tweets?.length !== 0) {
-      setLoading(true);
-      if (limit + 5 > tweets?.length) {
-        setLimit(tweets?.length);
-      } else {
-        setLimit((prev) => prev + 5);
-      }
-      setLoading(false);
-    }
-  }, [toggleShow]);
 
   if (!link)
     return <p className="text-center my-4 w-full">Search to fetch tweets</p>;
@@ -57,7 +44,11 @@ const Tweets = ({ tweets, link, currentTab }) => {
         )}
         {tweets && limit < tweets.length && (
           <Button
-            onClick={() => setToggleShow((prev) => !prev)}
+            onClick={() => {
+              setLoading(true);
+              setLimit((prev) => prev + 5);
+              setLoading(false);
+            }}
             className="py-2 my-4 px-4 bg-theme-color text-white rounded font-bold text-base focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white"
             loading={loading}
             size="large"

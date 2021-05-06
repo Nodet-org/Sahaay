@@ -7,7 +7,7 @@ import phoneLightIcon from "../../assets/phoneLight.svg";
 import closeIcon from "../../assets/close.svg";
 import personIcon from "../../assets/person.svg";
 import phoneIcon from "../../assets/phone.svg";
-import whatsappIcon from "../../assets/whatsapp.svg";
+// import whatsappIcon from "../../assets/whatsapp.svg";
 import timeIcon from "../../assets/time.svg";
 import dateIcon from "../../assets/date.svg";
 import emailIcon from "../../assets/email.svg";
@@ -48,7 +48,6 @@ const ResourceCard = (props) => {
         localStorage.setItem(`isReported_${props.post.id}`, true);
         setLoading(false);
       } catch (error) {
-        console.log(error.toString());
         message.error(error.toString());
         setLoading(false);
       }
@@ -70,6 +69,7 @@ const ResourceCard = (props) => {
           src={closeIcon}
           onClick={props.handleCancel}
           className="outline-none"
+          alt="x"
         />
       }
       onCancel={props.handleCancel}
@@ -156,14 +156,14 @@ const ResourceCard = (props) => {
         </table>
       </div>
       <div className="flex justify-between">
-          <a
-            className="w-full bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
-            href={`tel:${props.post.phone}`}
-          >
-            <img src={phoneLightIcon} className="pr-5 text-white" alt="call" />
-            <span className="text-white font-bold">Call Now</span>
-          </a>
-          {/* <a
+        <a
+          className="w-full bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
+          href={`tel:${props.post.phone}`}
+        >
+          <img src={phoneLightIcon} className="pr-5 text-white" alt="call" />
+          <span className="text-white font-bold">Call Now</span>
+        </a>
+        {/* <a
             className="w-1/2 bg-green-500 flex items-center justify-center rounded-md h-10 my-5 ml-2"
             href={`https://api.whatsapp.com/send/?phone=91${props.post.phone}&text&app_absent=0`}
           >

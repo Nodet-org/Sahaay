@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Tag } from "antd";
 
-import Medicine from "../../assets/medicine.svg";
-
 import ResourceCard from "../ResourceCard";
 import { getIcon } from "../../utils/helpers";
 
@@ -33,7 +31,8 @@ const Card = ({ post, resource, location }) => {
         <div className="flex justify-between w-full flex-row-reverse items-center">
           <p className="text-right">
             {/* <span className="text-gray-500">Posted at: </span> */}
-            {post?.time.split(":")[0]}:{post?.time.split(":")[1]} {String(post?.time.slice(-2)).toUpperCase()}
+            {post?.time.split(":")[0]}:{post?.time.split(":")[1]}{" "}
+            {String(post?.time.slice(-2)).toUpperCase()}
           </p>
           <div className="flex items-center">
             {getIcon(resource, 35)}
@@ -63,7 +62,7 @@ const Card = ({ post, resource, location }) => {
             </div>
           </div>
         </div>
-        {post?.price == "0" && (
+        {post?.price === "0" && (
           <div className="flex justify-end">
             <Tag color="green">FREE</Tag>
           </div>
