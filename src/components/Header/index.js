@@ -52,7 +52,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           setLink(response?.link);
         } else if (response?.message) message.error(response.message);
       } catch (error) {
-        console.log(error);
         if (error?.message) message.error(error.message);
         else message.error(error.toString());
       }
@@ -64,9 +63,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
 
   // Location search
   function onChange(value) {
-    // this.setState({ fetching: false, search: [], value: value });
-    console.log("HERE");
-    console.log("on change", value);
     setPin(value.value);
     setFetching(false);
     setSearch([]);
@@ -101,7 +97,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
       });
       setSearch(searchResults);
       setFetching(false);
-      searchResults.length && setValue(searchResults[0]);
+      setValue(value);
     }
   };
 
