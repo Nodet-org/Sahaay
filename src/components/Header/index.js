@@ -6,6 +6,8 @@ import { API_URL } from "../../utils/constants";
 
 import logo from "../../assets/logo.svg";
 
+import { states } from "./states.json";
+
 const { Option } = Select;
 
 const Header = ({ setTweets, setLink, setQuery }) => {
@@ -63,49 +65,43 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   // Location search
   function onChange(value) {
     // this.setState({ fetching: false, search: [], value: value });
+    console.log("HERE");
+    console.log("on change", value);
     setPin(value.value);
     setFetching(false);
     setSearch([]);
     setValue(value);
-    // console.log("on change", value);
   }
 
   const onSearch = (value) => {
-    // console.log("fetching data", value);
     setSearch([]);
-
-    if (value.length !== 0 && value.length % 2 === 0) {
+    if (value.length !== 0) {
       setFetching(true);
-      // if (navigator.geolocation) {
-      // navigator.geolocation.getCurrentPosition((pos) => {
-      axios
-        .get(
-          `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&tag=place:city,place:town,place:village`
-        )
-        .then(function (response) {
-          // handle success
-          if (response.data) {
-            const newSearch = response.data.map((loc) => ({
-              name: loc.display_name,
-              search: loc.display_place,
-              lat: loc.lat,
-              lon: loc.lon,
-              id: loc.place_id,
-              address: loc.address,
-            }));
-            console.log(newSearch);
-            setSearch(newSearch);
-            setFetching(false);
-            setValue(newSearch);
-          }
-        })
-        .catch((err) => console.log(err.toString()));
-      // });
-      // } else {
-      // console.log("not suppprted");
-      // x.innerHTML = "Geolocation is not supported by this browser.";
-      // setFetching(false);
-      // }
+      let searchResults = [];
+      let splitBy = ",";
+      if (value.includes(" ")) splitBy = " ";
+      else if (value.includes(",")) splitBy = ",";
+      value.split(splitBy).map((val) => {
+        val = val.trim();
+        if (val !== "")
+          states.map((state) => {
+            if (state.state.toLowerCase().includes(val.toLowerCase())) {
+              searchResults.push(state.state);
+              state.districts.map((district) => {
+                searchResults.push(`${district}, ${state.state}`);
+              });
+            } else {
+              state.districts.map((district) => {
+                if (district.toLowerCase().includes(val.toLowerCase())) {
+                  searchResults.push(`${district}, ${state.state}`);
+                }
+              });
+            }
+          });
+      });
+      setSearch(searchResults);
+      setFetching(false);
+      searchResults.length && setValue(searchResults[0]);
     }
   };
 
@@ -128,10 +124,10 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           <Select
             // mode="multiple"
             labelInValue
-            value={value?.display_place}
+            value={value}
             // showArrow
             showSearch
-            placeholder="Search...."
+            placeholder="Search by district/state"
             notFoundContent={
               fetching ? <Spin size="small" /> : "Search for your location."
             }
@@ -140,17 +136,13 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             onChange={onChange}
             style={{ width: "100%" }}
             suffixIcon={false}
-            className="customSelect"
             size="large"
           >
-            {search?.map(
-              (d, id) =>
-                d.address.postcode && (
-                  <Option key={id} value={d.address.postcode}>
-                    {d.name}
-                  </Option>
-                )
-            )}
+            {search?.map((d, id) => (
+              <Option key={id} value={d.split(",")[0].toLowerCase()}>
+                {d}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
