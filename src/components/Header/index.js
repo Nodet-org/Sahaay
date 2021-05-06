@@ -15,13 +15,14 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [value, setValue] = useState();
+  const [pin, setPin] = useState();
 
   const handleSubmit = async (e) => {
-    if (search) {
+    if (pin) {
       setTweets([]);
       setLoading(true);
       let query = {
-        cityOrPincode: search,
+        cityOrPincode: pin,
         resource: searchSelect,
         verified: verified,
       };
@@ -62,10 +63,11 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   // Location search
   function onChange(value) {
     // this.setState({ fetching: false, search: [], value: value });
+    setPin(value.value);
     setFetching(false);
     setSearch([]);
     setValue(value);
-    console.log("on change", value);
+    // console.log("on change", value);
   }
 
   const onSearch = (value) => {
@@ -122,7 +124,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         </div>
       </div>
       <Form onFinish={handleSubmit} id="searchForm">
-        <div className="bg-white mx-5 rounded-full h-9 flex items-center justify-between px-4 my-4">
+        <div className="bg-white mx-5  h-9 flex items-center justify-between  my-4">
           <Select
             // mode="multiple"
             labelInValue
@@ -136,12 +138,20 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             filterOption={false}
             onSearch={onSearch}
             onChange={onChange}
-            // style={{ width: "100%" }}
-            className="bg-transparent outline-none flex-1"
-            placeholder="Search by Pincode/City"
-            onKeyUp={(e) => e.key === "Enter" && handleSubmit()}
-            autoComplete="off"
-          />
+            style={{ width: "100%" }}
+            suffixIcon={false}
+            className="customSelect"
+            size="large"
+          >
+            {search?.map(
+              (d, id) =>
+                d.address.postcode && (
+                  <Option key={id} value={d.address.postcode}>
+                    {d.name}
+                  </Option>
+                )
+            )}
+          </Select>
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
           <Select
