@@ -238,7 +238,7 @@ const AddResource = () => {
             /> */}
             <Button
               htmlType="submit"
-              className="bg-theme-color text-white font-semibold cursor-pointer"
+              className="bg-theme-color text-white focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white rounded font-semibold cursor-pointer"
               style={{ width: "100%" }}
               size="large"
               loading={loading}
