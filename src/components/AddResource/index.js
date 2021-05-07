@@ -236,6 +236,7 @@ const AddResource = () => {
               requiredMark={false}
               name="state"
               tooltip={`Enter the state where ${selected} is available`}
+              initialValue="Kerala"
               rules={[
                 {
                   required: true,
@@ -250,8 +251,7 @@ const AddResource = () => {
                 placeholder="Select a state"
                 optionFilterProp="children"
                 onChange={onStateChange}
-                size="medium"
-                defaultValue="Kerala"
+                // defaultValue="Kerala"
                 filterOption={(input, option) =>
                   option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
@@ -268,6 +268,7 @@ const AddResource = () => {
               requiredMark={false}
               name="district"
               tooltip={`Enter the district where ${selected} is available`}
+              initialValue={district}
               rules={[
                 {
                   required: true,
@@ -278,8 +279,7 @@ const AddResource = () => {
               <Select
                 showSearch
                 style={{ width: "100%" }}
-                // value={district}
-                defaultValue={district}
+                // defaultValue={district}
                 value={district}
                 placeholder="Select a district"
                 optionFilterProp="children"
