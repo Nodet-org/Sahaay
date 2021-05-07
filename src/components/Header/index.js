@@ -1,7 +1,8 @@
-import { Checkbox, Form, message, Select, Button, Spin } from "antd";
+import { Checkbox, Form, message, Select, Button, Spin, Empty } from "antd";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
+import { states } from "../../utils/states.json";
 
 import { API_URL } from "../../utils/constants";
 
@@ -69,35 +70,33 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   }
 
   const getLocation = (value) => {
-    axios
-      .get(
-        `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&normalizestate=1&tag=place:city,place:town,place:village`
-      )
-      .then(function (response) {
-        // handle success
-        if (response.data) {
-          const newSearch = response.data.map((loc) => ({
-            name: [
-              loc.address.name,
-              loc.address.state,
-              loc.address.country,
-            ].join(", "),
-            search: loc.display_place,
-            lat: loc.lat,
-            lon: loc.lon,
-            id: loc.place_id,
-            address: loc.address,
-          }));
-          setSearch(newSearch);
-          setFetching(false);
-          setValue(newSearch);
-        }
-      })
-      .catch((err) => {
-        console.log(err.toString());
-        setFetching(false);
-        setError(true);
-      });
+    setError(false);
+    let searchResults = [];
+    let splitBy = ",";
+    if (value.includes(" ")) splitBy = " ";
+    else if (value.includes(",")) splitBy = ",";
+    value.split(splitBy).map((val) => {
+      val = val.trim();
+      if (val !== "")
+        states.map((state) => {
+          if (state.state.toLowerCase().includes(val.toLowerCase())) {
+            searchResults.push(state.state);
+            state.districts.map((district) => {
+              searchResults.push(`${district}, ${state.state}`);
+            });
+          } else {
+            state.districts.map((district) => {
+              if (district.toLowerCase().includes(val.toLowerCase())) {
+                searchResults.push(`${district}, ${state.state}`);
+              }
+            });
+          }
+        });
+    });
+    searchResults.length === 0 && setError(true);
+    setSearch(searchResults);
+    setFetching(false);
+    setValue(value);
   };
 
   const debounceSearch = useCallback(
@@ -110,15 +109,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
       setSearch([]);
       setFetching(true);
       debounceSearch(value);
-      // if (navigator.geolocation) {
-      // navigator.geolocation.getCurrentPosition((pos) => {
-
-      // });
-      // } else {
-      // console.log("not suppprted");
-      // x.innerHTML = "Geolocation is not supported by this browser.";
-      // setFetching(false);
-      // }
     }
   };
 
@@ -141,15 +131,15 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           <Select
             // mode="multiple"
             labelInValue
-            value={value?.display_place}
+            value={value}
             // showArrow
             showSearch
-            placeholder="Search for your city..."
+            placeholder="Search by district/state"
             notFoundContent={
               fetching ? (
                 <Spin size="small" />
               ) : error ? (
-                "No results found"
+                <Empty />
               ) : (
                 "Search for your location."
               )
@@ -159,18 +149,13 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             onChange={onChange}
             style={{ width: "100%" }}
             suffixIcon={false}
-            className="customSelect"
             size="large"
           >
-            {search?.map(
-              (d, id) =>
-                d.address.postcode &&
-                d.address?.postcode?.length === 6 && (
-                  <Option key={id} value={d.address.postcode}>
-                    {d.name}
-                  </Option>
-                )
-            )}
+            {search?.map((d, id) => (
+              <Option key={id} value={d.split(",")[0].toLowerCase()}>
+                {d}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">

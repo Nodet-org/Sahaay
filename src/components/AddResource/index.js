@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { Modal, Form, Input, Select, message, Button, Spin } from "antd";
+import { Modal, Form, Input, Select, message, Button, Spin, Empty } from "antd";
 import axios from "axios";
 import debounce from "lodash/debounce";
+import { states } from "../../utils/states.json";
 
 import { db } from "../../utils/firebase";
 
@@ -103,48 +104,42 @@ const AddResource = () => {
   }
 
   const getLocation = (value) => {
-    axios
-      .get(
-        `https://api.locationiq.com/v1/autocomplete.php?key=80c6277b4fd80d&q=${value}&countrycodes=IN&limit=5&normalizecity=1&tag=place:city,place:town,place:village`
-      )
-      .then(function (response) {
-        // handle success
-        if (response.data) {
-          const newSearch = response.data.map((loc) => ({
-            name: [
-              loc.address.name,
-              loc.address.state,
-              loc.address.country,
-            ].join(", "),
-            search: loc.display_place,
-            lat: loc.lat,
-            lon: loc.lon,
-            id: loc.place_id,
-            address: loc.address,
-          }));
-          // console.log(newSearch);
-          setSearch(newSearch);
-          setFetching(false);
-          setValue(newSearch);
-        }
-      })
-      .catch((err) => {
-        console.log(err.toString());
-        setFetching(false);
-        setError(true);
-      });
+    setError(false);
+    let searchResults = [];
+    let splitBy = ",";
+    if (value.includes(" ")) splitBy = " ";
+    else if (value.includes(",")) splitBy = ",";
+    value.split(splitBy).map((val) => {
+      val = val.trim();
+      if (val !== "")
+        states.map((state) => {
+          if (state.state.toLowerCase().includes(val.toLowerCase())) {
+            searchResults.push(state.state);
+            state.districts.map((district) => {
+              searchResults.push(`${district}, ${state.state}`);
+            });
+          } else {
+            state.districts.map((district) => {
+              if (district.toLowerCase().includes(val.toLowerCase())) {
+                searchResults.push(`${district}, ${state.state}`);
+              }
+            });
+          }
+        });
+    });
+    searchResults.length === 0 && setError(true);
+    setSearch(searchResults);
+    setFetching(false);
+    setValue(value);
   };
 
   const debounceSearch = useCallback(
-    debounce((place) => getLocation(place), 500),
+    debounce((place) => getLocation(place), 200),
     []
   );
 
   const onSearch = (value) => {
-    // console.log("fetching data", value);
-
     if (value.length !== 0) {
-      setError(false);
       setSearch([]);
       setFetching(true);
       debounceSearch(value);
@@ -243,7 +238,7 @@ const AddResource = () => {
                   fetching ? (
                     <Spin size="small" />
                   ) : error ? (
-                    "No results found"
+                    <Empty />
                   ) : (
                     "Search for your location."
                   )
@@ -256,14 +251,11 @@ const AddResource = () => {
                 className="customSelect"
                 size="medium"
               >
-                {search?.map(
-                  (d, id) =>
-                    d.address.postcode && (
-                      <Option key={id} value={d.address.postcode}>
-                        {d.name}
-                      </Option>
-                    )
-                )}
+                {search?.map((d, id) => (
+                  <Option key={id} value={d.split(",")[0].toLowerCase()}>
+                    {d}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item
@@ -278,8 +270,8 @@ const AddResource = () => {
                 },
                 {
                   pattern: new RegExp("^[1-9][0-9]*$"),
-                  message: "Sorry, you can't add an unavailable resource !"
-                }
+                  message: "Sorry, you can't add an unavailable resource !",
+                },
               ]}
             >
               <Input placeholder={`The quantity of available ${selected}`} />
