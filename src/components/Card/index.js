@@ -55,6 +55,13 @@ const Card = ({ post, resource, location }) => {
             </div>
           </div>
           <div className="flex flex-row justify-start items-center">
+            <p className="font-semibold text-base w-16">Quantity</p>
+            <div className="flex flex-row mx-2">
+              <p className="mx-2">:</p>
+              <p>{post?.quantity}</p>
+            </div>
+          </div>
+          <div className="flex flex-row justify-start items-center">
             <p className="font-semibold text-base w-16">Location</p>
             <div className="flex flex-row mx-2">
               <p className="mx-2">:</p>

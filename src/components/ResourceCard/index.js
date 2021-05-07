@@ -12,6 +12,7 @@ import timeIcon from "../../assets/time.svg";
 import dateIcon from "../../assets/date.svg";
 import emailIcon from "../../assets/email.svg";
 import priceIcon from "../../assets/price.svg";
+import quantityIcon from "../../assets/quantity.svg";
 
 import { getIcon } from "../../utils/helpers";
 
@@ -151,6 +152,17 @@ const ResourceCard = (props) => {
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
               : &nbsp; {props.post.price === "0" ? "Free" : props.post.price}
+            </td>
+          </tr>
+          <tr>
+            <td className="hidden sm:flex items-center justify-center">
+              <img src={quantityIcon} alt="price" />
+            </td>
+            <td className="text-sm sm:text-base font-semibold pr-2 sm:px-4">
+              Quantity
+            </td>
+            <td className="text-sm sm:text-base font-semibold sm:px-4">
+              : &nbsp; {props.post?.quantity === "0" ? "Unavailable" : props.post?.quantity}
             </td>
           </tr>
         </table>

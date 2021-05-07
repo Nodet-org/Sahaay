@@ -4,7 +4,7 @@
 
 - [Repo](https://github.com/Nodet-org/Sahaay)
 
-- [Website](https://sahaay.vercel.app/)
+- [Website](https://sahaay.xyz)
 
 <br />
 

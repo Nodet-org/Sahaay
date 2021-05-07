@@ -70,6 +70,7 @@ const AddResource = () => {
         name: value.name,
         phone: value.phone,
         email: value.email || "",
+        quantity: value.quantity,
         price: value.price,
         date: new Date().toLocaleDateString("en-IN"),
         time: new Date().toLocaleTimeString("en-IN"),
@@ -237,7 +238,7 @@ const AddResource = () => {
                 labelInValue
                 value={value?.display_place}
                 showSearch
-                placeholder="Enter the location of availablity..."
+                placeholder={`The location of availablity of ${selected}`}
                 notFoundContent={
                   fetching ? (
                     <Spin size="small" />
@@ -264,6 +265,20 @@ const AddResource = () => {
                     )
                 )}
               </Select>
+            </Form.Item>
+            <Form.Item
+              label="Quantity"
+              requiredMark={false}
+              name="quantity"
+              tooltip={`Enter the quantity of available ${selected}`}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your the available quantity.",
+                },
+              ]}
+            >
+              <Input placeholder={`The quantity of available ${selected}`} />
             </Form.Item>
             <Form.Item
               label="Price"
