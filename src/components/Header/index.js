@@ -162,15 +162,11 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             className="customSelect"
             size="large"
           >
-            {search?.map(
-              (d, id) =>
-                d.address.postcode &&
-                d.address?.postcode?.length === 6 && (
-                  <Option key={id} value={d.address.postcode}>
-                    {d.name}
-                  </Option>
-                )
-            )}
+            {search?.map((d, id) => (
+              <Option key={id} value={d.split(",")[0].toLowerCase()}>
+                {d}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">

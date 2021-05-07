@@ -256,14 +256,11 @@ const AddResource = () => {
                 className="customSelect"
                 size="medium"
               >
-                {search?.map(
-                  (d, id) =>
-                    d.address.postcode && (
-                      <Option key={id} value={d.address.postcode}>
-                        {d.name}
-                      </Option>
-                    )
-                )}
+                {search?.map((d, id) => (
+                  <Option key={id} value={d.split(",")[0].toLowerCase()}>
+                    {d}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item
@@ -278,8 +275,8 @@ const AddResource = () => {
                 },
                 {
                   pattern: new RegExp("^[1-9][0-9]*$"),
-                  message: "Sorry, you can't add an unavailable resource !"
-                }
+                  message: "Sorry, you can't add an unavailable resource !",
+                },
               ]}
             >
               <Input placeholder={`The quantity of available ${selected}`} />
