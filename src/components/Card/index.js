@@ -69,9 +69,13 @@ const Card = ({ post, resource, location }) => {
             </div>
           </div>
         </div>
-        {post?.price === "0" && (
+        {post?.price === "0" ? (
           <div className="flex justify-end">
             <Tag color="green">FREE</Tag>
+          </div>
+        ) : (
+          <div className="flex justify-end">
+            <Tag color="blue">&#8377; {post.price}</Tag>
           </div>
         )}
       </div>

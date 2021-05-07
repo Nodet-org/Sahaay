@@ -276,6 +276,10 @@ const AddResource = () => {
                   required: true,
                   message: "Please input your the available quantity.",
                 },
+                {
+                  pattern: new RegExp("^[1-9][0-9]*$"),
+                  message: "Sorry, you can't add an unavailable resource !"
+                }
               ]}
             >
               <Input placeholder={`The quantity of available ${selected}`} />
