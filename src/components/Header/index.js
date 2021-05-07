@@ -1,7 +1,5 @@
 import { Checkbox, Form, message, Select, Button, Spin, Empty } from "antd";
-import axios from "axios";
-import { useCallback, useState } from "react";
-import debounce from "lodash/debounce";
+import { useState } from "react";
 import { states } from "../../utils/states.json";
 
 import { API_URL } from "../../utils/constants";
@@ -10,24 +8,25 @@ import logo from "../../assets/logo.svg";
 
 const { Option } = Select;
 
+const stateRaw = [];
+states.map((doc) => stateRaw.push(doc.state));
+const cityRaw = {};
+states.map((doc) => (cityRaw[doc.state] = doc.districts));
+
 const Header = ({ setTweets, setLink, setQuery }) => {
-  const [search, setSearch] = useState([]);
   const [searchSelect, setSearchSelect] = useState("oxygen");
-  const [verified, setVerified] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(false);
-  const [value, setValue] = useState();
-  const [pin, setPin] = useState();
-  const [error, setError] = useState(false);
+  const [state, setState] = useState(cityRaw["Kerala"]);
+  const [district, setDistrict] = useState(cityRaw["Kerala"][0]);
 
   const handleSubmit = async (e) => {
-    if (pin) {
+    if (district) {
       setTweets([]);
       setLoading(true);
       let query = {
-        cityOrPincode: pin,
+        cityOrPincode: district,
         resource: searchSelect,
-        verified: verified,
+        verified: true,
       };
 
       try {
@@ -44,7 +43,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           query = {
             city: response.city,
             resource: searchSelect,
-            verified: verified,
+            verified: true,
           };
           message.success("Loaded tweets", 3);
           setQuery(query);
@@ -61,56 +60,14 @@ const Header = ({ setTweets, setLink, setQuery }) => {
     }
   };
 
-  // Location search
-  function onChange(value) {
-    setPin(value.value);
-    setFetching(false);
-    setSearch([]);
-    setValue(value);
+  function onStateChange(value) {
+    setState(cityRaw[value]);
+    setDistrict(cityRaw[value][0]);
   }
 
-  const getLocation = (value) => {
-    setError(false);
-    let searchResults = [];
-    let splitBy = ",";
-    if (value.includes(" ")) splitBy = " ";
-    else if (value.includes(",")) splitBy = ",";
-    value.split(splitBy).map((val) => {
-      val = val.trim();
-      if (val !== "")
-        states.map((state) => {
-          if (state.state.toLowerCase().includes(val.toLowerCase())) {
-            searchResults.push(state.state);
-            state.districts.map((district) => {
-              searchResults.push(`${district}, ${state.state}`);
-            });
-          } else {
-            state.districts.map((district) => {
-              if (district.toLowerCase().includes(val.toLowerCase())) {
-                searchResults.push(`${district}, ${state.state}`);
-              }
-            });
-          }
-        });
-    });
-    searchResults.length === 0 && setError(true);
-    setSearch(searchResults);
-    setFetching(false);
-    setValue(value);
-  };
-
-  const debounceSearch = useCallback(
-    debounce((place) => getLocation(place), 200),
-    []
-  );
-
-  const onSearch = (value) => {
-    if (value.length !== 0) {
-      setSearch([]);
-      setFetching(true);
-      debounceSearch(value);
-    }
-  };
+  function onDistrictChange(value) {
+    setDistrict(value);
+  }
 
   return (
     <div className="flex flex-col py-4">
@@ -127,42 +84,51 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         </div>
       </div>
       <Form onFinish={handleSubmit} id="searchForm">
-        <div className="bg-white mx-5  h-9 flex items-center justify-between  my-4">
+        <div className="mx-5  h-9 flex items-center justify-between  my-4">
           <Select
-            // mode="multiple"
-            labelInValue
-            value={value}
-            // showArrow
             showSearch
-            placeholder="Search by district/state"
-            notFoundContent={
-              fetching ? (
-                <Spin size="small" />
-              ) : error ? (
-                <Empty />
-              ) : (
-                "Search for your location."
-              )
-            }
-            filterOption={false}
-            onSearch={onSearch}
-            onChange={onChange}
             style={{ width: "100%" }}
-            suffixIcon={false}
+            placeholder="Select a state"
+            optionFilterProp="children"
+            onChange={onStateChange}
             size="large"
+            defaultValue="Kerala"
+            filterOption={(input, option) =>
+              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
           >
-            {search?.map((d, id) => (
-              <Option key={id} value={d.split(",")[0].toLowerCase()}>
-                {d}
+            {stateRaw.map((doc, id) => (
+              <Option key={id} value={doc}>
+                {doc}
+              </Option>
+            ))}
+          </Select>
+          <div style={{ width: "20%" }}></div>
+          <Select
+            showSearch
+            style={{ width: "100%" }}
+            value={district}
+            placeholder="Select a district"
+            optionFilterProp="children"
+            onChange={onDistrictChange}
+            size="large"
+            filterOption={(input, option) =>
+              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {state.map((doc, id) => (
+              <Option key={id} value={doc}>
+                {doc}
               </Option>
             ))}
           </Select>
         </div>
-        <div className="mb-2 mx-5 flex flex-col justify-around sm:flex-row items-center">
+        <div className="mx-5 h-9 flex items-center justify-between  my-4">
           <Select
             defaultValue={searchSelect}
             onChange={(e) => setSearchSelect(e)}
-            className="flex-2 w-full"
+            // className="flex-1"
+            style={{ width: "100%" }}
             size="large"
           >
             <Option value="oxygen">Oxygen</Option>
@@ -178,20 +144,10 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             <Option value="food">Food</Option>
             <Option value="Ambulance">Ambulance</Option>
           </Select>
-          <Form.Item
-            label="Verified"
-            tooltip="Currently only works on tweet tab"
-            className="flex-1 w-full flex items-center h-full my-0 sm:px-4 py-1 verified"
-            htmlFor="verified"
-          >
-            <Checkbox
-              onChange={(e) => setVerified(e.target.checked)}
-              checked={verified}
-              id="verified"
-            />
-          </Form.Item>
+          <div style={{ width: "20%" }}></div>
           <Button
-            className="cursor-pointer flex items-center justify-center py-2 px-4 flex-1 w-full bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
+            className="cursor-pointer  items-center justify-center py-2 px-4 bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
+            style={{ width: "100%" }}
             size="large"
             loading={loading}
             form="searchForm"
