@@ -11,6 +11,7 @@ const { Option } = Select;
 
 const AddResource = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isMedicine, setIsMedicine] = useState(false);
   const [selected, setSelected] = useState("oxygen");
   const [scrollY, setScrollY] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -38,6 +39,12 @@ const AddResource = () => {
   const showModal = () => {
     setIsModalVisible(true);
   };
+
+  const onResourceSelection = (val) => {
+    setSelected(val)
+    if (val === "medicine") setIsMedicine(true);
+    else setIsMedicine(false); 
+  }
 
   const getCity = async ({ value: cityOrPincode }) => {
     let city = "";
@@ -206,21 +213,34 @@ const AddResource = () => {
               ]}
               initialValue="oxygen"
             >
-              <Select onChange={(val) => setSelected(val)}>
+              <Select onChange={(val) => onResourceSelection(val)}>
                 <Option value="oxygen">Oxygen</Option>
                 <Option value="bed">Beds</Option>
                 <Option value="icu">ICU</Option>
                 <Option value="ventilator">Ventilator</Option>
                 <Option value="tests">Tests</Option>
-                <Option value="fabiflu">Fabiflu</Option>
-                <Option value="remdesivir">Remdesivir</Option>
-                <Option value="favipiravir">Favipiravir</Option>
-                <Option value="tocilizumab">Tocilizumab</Option>
+                <Option value="medicine">Medicine</Option>
                 <Option value="plasma">Plasma</Option>
                 <Option value="food">Food</Option>
                 <Option value="ambulance">Ambulance</Option>
               </Select>
             </Form.Item>
+            { isMedicine &&
+              <Form.Item
+                label="Medicine Name"
+                requiredMark={false}
+                name="medicine_name"
+                tooltip="Enter the name of the medicine which is available"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the medicine name",
+                  },
+                ]}
+              >
+                <Input placeholder="The name of the medicine available" />
+              </Form.Item>
+            }
             <Form.Item
               label="City"
               requiredMark={false}

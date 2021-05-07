@@ -185,10 +185,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             <Option value="icu">ICU</Option>
             <Option value="ventilator">Ventilator</Option>
             <Option value="tests">Tests</Option>
-            <Option value="fabiflu">Fabiflu</Option>
-            <Option value="remdesivir">Remdesivir</Option>
-            <Option value="favipiravir">Favipiravir</Option>
-            <Option value="tocilizumab">Tocilizumab</Option>
+            <Option value="medicine">Medicine</Option>
             <Option value="plasma">Plasma</Option>
             <Option value="food">Food</Option>
             <Option value="Ambulance">Ambulance</Option>
