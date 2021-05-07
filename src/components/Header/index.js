@@ -129,10 +129,10 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           <Select
             // mode="multiple"
             labelInValue
-            value={value?.display_place}
+            value={value}
             // showArrow
             showSearch
-            placeholder="Search for your city..."
+            placeholder="Search by district/state"
             notFoundContent={
               fetching ? (
                 <Spin size="small" />
@@ -147,7 +147,6 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             onChange={onChange}
             style={{ width: "100%" }}
             suffixIcon={false}
-            className="customSelect"
             size="large"
           >
             {search?.slice(0, 5).map((d, id) => (
