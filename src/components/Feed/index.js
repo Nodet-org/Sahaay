@@ -25,7 +25,16 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
               `https://us1.locationiq.com/v1/reverse.php?key=80c6277b4fd80d&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`
             )
             .then(function (response) {
-              setCity(response.data.address.state.toLowerCase());
+              if (
+                response?.data?.address?.state_district
+                  ?.split()[0]
+                  ?.toLowerCase()
+              )
+                setCity(
+                  response?.data?.address?.state_district
+                    ?.split()[0]
+                    ?.toLowerCase()
+                );
             });
         });
       } else {
