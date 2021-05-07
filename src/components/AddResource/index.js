@@ -251,7 +251,7 @@ const AddResource = () => {
                 className="customSelect"
                 size="medium"
               >
-                {search?.slice(0, 5).map((d, id) => (
+                {search?.map((d, id) => (
                   <Option key={id} value={d.split(",")[0].toLowerCase()}>
                     {d}
                   </Option>

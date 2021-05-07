@@ -151,7 +151,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
             suffixIcon={false}
             size="large"
           >
-            {search?.slice(0, 5).map((d, id) => (
+            {search?.map((d, id) => (
               <Option key={id} value={d.split(",")[0].toLowerCase()}>
                 {d}
               </Option>
