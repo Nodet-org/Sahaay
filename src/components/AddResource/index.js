@@ -10,6 +10,11 @@ import plusIcon from "../../assets/plus.svg";
 
 const { Option } = Select;
 
+const stateRaw = [];
+states.map((doc) => stateRaw.push(doc.state));
+const cityRaw = {};
+states.map((doc) => (cityRaw[doc.state] = doc.districts));
+
 const AddResource = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selected, setSelected] = useState("oxygen");
@@ -19,6 +24,8 @@ const AddResource = () => {
   const [value, setValue] = useState();
   const [search, setSearch] = useState([]);
   const [error, setError] = useState(false);
+  const [state, setState] = useState(cityRaw["Kerala"]);
+  const [district, setDistrict] = useState(cityRaw["Kerala"][0]);
 
   const [form] = Form.useForm();
 
@@ -40,37 +47,36 @@ const AddResource = () => {
     setIsModalVisible(true);
   };
 
-  const getCity = async ({ value: cityOrPincode }) => {
-    let city = "";
-    if (!isNaN(+cityOrPincode)) {
-      try {
-        const response = await (
-          await fetch("https://api.postalpincode.in/pincode/" + cityOrPincode)
-        ).json();
-        if (response[0].Status && response[0].PostOffice.length) {
-          city = response[0].PostOffice[0].District;
-        } else {
-          return { inValid: "pincode" };
-        }
-      } catch (err) {
-        console.log(err);
-        return { inValid: "pincode" };
-      }
-    } else {
-      city = cityOrPincode;
-    }
-    return city.toLowerCase();
-  };
+  // const getCity = async ({ value: cityOrPincode }) => {
+  //   let city = "";
+  //   if (!isNaN(+cityOrPincode)) {
+  //     try {
+  //       const response = await (
+  //         await fetch("https://api.postalpincode.in/pincode/" + cityOrPincode)
+  //       ).json();
+  //       if (response[0].Status && response[0].PostOffice.length) {
+  //         city = response[0].PostOffice[0].District;
+  //       } else {
+  //         return { inValid: "pincode" };
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //       return { inValid: "pincode" };
+  //     }
+  //   } else {
+  //     city = cityOrPincode;
+  //   }
+  //   return city.toLowerCase();
+  // };
 
   const handleSubmit = async (value) => {
     setLoading(true);
     try {
-      const city = await getCity(value.city);
-      const dbref = await db.ref(`feed/${city}/${selected}`).push();
+      // const city = await getCity(value.city);
+      const dbref = await db.ref(`feed/${value.district}/${selected}`).push();
       const newResource = {
         name: value.name,
         phone: value.phone,
-        email: value.email || "",
         quantity: value.quantity,
         price: value.price,
         date: new Date().toLocaleDateString("en-IN"),
@@ -146,6 +152,15 @@ const AddResource = () => {
     }
   };
 
+  function onStateChange(value) {
+    setState(cityRaw[value]);
+    setDistrict(cityRaw[value][0]);
+  }
+
+  function onDistrictChange(value) {
+    setDistrict(value);
+  }
+
   return (
     <>
       <div
@@ -217,43 +232,66 @@ const AddResource = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              label="City"
+              label="State"
               requiredMark={false}
-              name="city"
-              tooltip={`Enter the city where ${selected} is available`}
+              name="state"
+              tooltip={`Enter the state where ${selected} is available`}
               rules={[
                 {
                   required: true,
-                  message: `Please input the city where ${selected} is available`,
+                  message: `Please input the state where ${selected} is available`,
                 },
               ]}
             >
               {/* <Input /> */}
               <Select
-                labelInValue
-                value={value?.display_place}
                 showSearch
-                placeholder={`The location of availablity of ${selected}`}
-                notFoundContent={
-                  fetching ? (
-                    <Spin size="small" />
-                  ) : error ? (
-                    <Empty />
-                  ) : (
-                    "Search for your location."
-                  )
-                }
-                filterOption={false}
-                onSearch={onSearch}
-                onChange={onChange}
                 style={{ width: "100%" }}
-                suffixIcon={false}
-                className="customSelect"
+                placeholder="Select a state"
+                optionFilterProp="children"
+                onChange={onStateChange}
                 size="medium"
+                defaultValue="Kerala"
+                filterOption={(input, option) =>
+                  option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
               >
-                {search?.map((d, id) => (
-                  <Option key={id} value={d.split(",")[0].toLowerCase()}>
-                    {d}
+                {stateRaw.map((doc, id) => (
+                  <Option key={id} value={doc}>
+                    {doc}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="District"
+              requiredMark={false}
+              name="district"
+              tooltip={`Enter the district where ${selected} is available`}
+              rules={[
+                {
+                  required: true,
+                  message: `Please input the district where ${selected} is available`,
+                },
+              ]}
+            >
+              <Select
+                showSearch
+                style={{ width: "100%" }}
+                // value={district}
+                defaultValue={district}
+                value={district}
+                placeholder="Select a district"
+                optionFilterProp="children"
+                onChange={onDistrictChange}
+                size="medium"
+                filterOption={(input, option) =>
+                  option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {state.map((doc, id) => (
+                  <Option key={id} value={doc}>
+                    {doc}
                   </Option>
                 ))}
               </Select>
@@ -317,23 +355,6 @@ const AddResource = () => {
               ]}
             >
               <Input placeholder="Your number" />
-            </Form.Item>
-            <Form.Item
-              label={[
-                "Email",
-                <span className="text-gray-400 pl-1">(Optional)</span>,
-              ]}
-              requiredMark={false}
-              name="email"
-              tooltip="Enter your email (Optional)"
-              rules={[
-                {
-                  type: "email",
-                  message: "The input is not valid E-mail!",
-                },
-              ]}
-            >
-              <Input placeholder="Your email id" />
             </Form.Item>
             <Button
               htmlType="submit"
