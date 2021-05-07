@@ -84,77 +84,81 @@ const Header = ({ setTweets, setLink, setQuery }) => {
         </div>
       </div>
       <Form onFinish={handleSubmit} id="searchForm">
-        <div className="mx-5  h-9 flex items-center justify-between  my-4">
-          <Select
-            showSearch
-            style={{ width: "100%" }}
-            placeholder="Select a state"
-            optionFilterProp="children"
-            onChange={onStateChange}
-            size="large"
-            defaultValue="Kerala"
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {stateRaw.map((doc, id) => (
-              <Option key={id} value={doc}>
-                {doc}
-              </Option>
-            ))}
-          </Select>
-          <div style={{ width: "20%" }}></div>
-          <Select
-            showSearch
-            style={{ width: "100%" }}
-            value={district}
-            placeholder="Select a district"
-            optionFilterProp="children"
-            onChange={onDistrictChange}
-            size="large"
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {state.map((doc, id) => (
-              <Option key={id} value={doc}>
-                {doc}
-              </Option>
-            ))}
-          </Select>
+        <div className="mx-5 h-9 flex items-center justify-between my-4">
+          <div className="flex-1 mr-2 sm:mr-10">
+            <Select
+              showSearch
+              placeholder="Select a state"
+              optionFilterProp="children"
+              onChange={onStateChange}
+              size="large"
+              defaultValue="Kerala"
+              filterOption={(input, option) =>
+                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              className="w-full"
+            >
+              {stateRaw.map((doc, id) => (
+                <Option key={id} value={doc}>
+                  {doc}
+                </Option>
+              ))}
+            </Select>
+          </div>
+          <div className="flex-1">
+            <Select
+              showSearch
+              value={district}
+              placeholder="Select a district"
+              optionFilterProp="children"
+              onChange={onDistrictChange}
+              size="large"
+              filterOption={(input, option) =>
+                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              className="w-full"
+            >
+              {state.map((doc, id) => (
+                <Option key={id} value={doc}>
+                  {doc}
+                </Option>
+              ))}
+            </Select>
+          </div>
         </div>
         <div className="mx-5 h-9 flex items-center justify-between  my-4">
-          <Select
-            defaultValue={searchSelect}
-            onChange={(e) => setSearchSelect(e)}
-            // className="flex-1"
-            style={{ width: "100%" }}
-            size="large"
-          >
-            <Option value="oxygen">Oxygen</Option>
-            <Option value="bed">Beds</Option>
-            <Option value="icu">ICU</Option>
-            <Option value="ventilator">Ventilator</Option>
-            <Option value="tests">Tests</Option>
-            <Option value="fabiflu">Fabiflu</Option>
-            <Option value="remdesivir">Remdesivir</Option>
-            <Option value="favipiravir">Favipiravir</Option>
-            <Option value="tocilizumab">Tocilizumab</Option>
-            <Option value="plasma">Plasma</Option>
-            <Option value="food">Food</Option>
-            <Option value="Ambulance">Ambulance</Option>
-          </Select>
-          <div style={{ width: "20%" }}></div>
-          <Button
-            className="cursor-pointer  items-center justify-center py-2 px-4 bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
-            style={{ width: "100%" }}
-            size="large"
-            loading={loading}
-            form="searchForm"
-            onClick={() => handleSubmit()}
-          >
-            Search
-          </Button>
+          <div className="flex-1 mr-2 sm:mr-10">
+            <Select
+              defaultValue={searchSelect}
+              onChange={(e) => setSearchSelect(e)}
+              className="w-full"
+              size="large"
+            >
+              <Option value="oxygen">Oxygen</Option>
+              <Option value="bed">Beds</Option>
+              <Option value="icu">ICU</Option>
+              <Option value="ventilator">Ventilator</Option>
+              <Option value="tests">Tests</Option>
+              <Option value="fabiflu">Fabiflu</Option>
+              <Option value="remdesivir">Remdesivir</Option>
+              <Option value="favipiravir">Favipiravir</Option>
+              <Option value="tocilizumab">Tocilizumab</Option>
+              <Option value="plasma">Plasma</Option>
+              <Option value="food">Food</Option>
+              <Option value="Ambulance">Ambulance</Option>
+            </Select>
+          </div>
+          <div className="flex-1">
+            <Button
+              className="cursor-pointer w-full items-center justify-center py-2 px-4 bg-theme-color focus:bg-theme-color focus:text-white hover:bg-theme-color text-white hover:text-white rounded"
+              size="large"
+              loading={loading}
+              form="searchForm"
+              onClick={() => handleSubmit()}
+            >
+              Search
+            </Button>
+          </div>
         </div>
       </Form>
     </div>
