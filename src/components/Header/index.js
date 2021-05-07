@@ -70,6 +70,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
   }
 
   const getLocation = (value) => {
+    setError(false);
     let searchResults = [];
     let splitBy = ",";
     if (value.includes(" ")) splitBy = " ";
@@ -92,6 +93,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
           }
         });
     });
+    searchResults.length === 0 && setError(true);
     setSearch(searchResults);
     setFetching(false);
     setValue(value);

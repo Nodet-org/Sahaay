@@ -104,6 +104,7 @@ const AddResource = () => {
   }
 
   const getLocation = (value) => {
+    setError(false);
     let searchResults = [];
     let splitBy = ",";
     if (value.includes(" ")) splitBy = " ";
@@ -126,6 +127,7 @@ const AddResource = () => {
           }
         });
     });
+    searchResults.length === 0 && setError(true);
     setSearch(searchResults);
     setFetching(false);
     setValue(value);
