@@ -256,10 +256,14 @@ const AddResource = () => {
                 {
                   required: true,
                   message: "Please input your price. If free enter 0",
+                },
+                {
+                  pattern: new RegExp("^[0-9]*$"),
+                  message: "Please enter a valid price"
                 }
               ]}
             >
-              <InputNumber min={0} className="w-full" placeholder="The price of the resource (0 would be a kindful act!)." />
+              <Input className="w-full" placeholder="The price of the resource (0 would be a kindful act!)." />
             </Form.Item>
             <Form.Item
               label="Name"
