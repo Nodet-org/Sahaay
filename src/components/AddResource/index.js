@@ -1,7 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Modal, Form, Input, Select, message, Button, Spin, Empty } from "antd";
-import axios from "axios";
-import debounce from "lodash/debounce";
+import { useState, useEffect } from "react";
+import { Modal, Form, Input, Select, message, Button } from "antd";
 import { states } from "../../utils/states.json";
 
 import { db } from "../../utils/firebase";
@@ -20,10 +18,6 @@ const AddResource = () => {
   const [selected, setSelected] = useState("oxygen");
   const [scrollY, setScrollY] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(false);
-  const [value, setValue] = useState();
-  const [search, setSearch] = useState([]);
-  const [error, setError] = useState(false);
   const [state, setState] = useState(cityRaw["Kerala"]);
   const [district, setDistrict] = useState(cityRaw["Kerala"][0]);
 
@@ -47,33 +41,12 @@ const AddResource = () => {
     setIsModalVisible(true);
   };
 
-  // const getCity = async ({ value: cityOrPincode }) => {
-  //   let city = "";
-  //   if (!isNaN(+cityOrPincode)) {
-  //     try {
-  //       const response = await (
-  //         await fetch("https://api.postalpincode.in/pincode/" + cityOrPincode)
-  //       ).json();
-  //       if (response[0].Status && response[0].PostOffice.length) {
-  //         city = response[0].PostOffice[0].District;
-  //       } else {
-  //         return { inValid: "pincode" };
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //       return { inValid: "pincode" };
-  //     }
-  //   } else {
-  //     city = cityOrPincode;
-  //   }
-  //   return city.toLowerCase();
-  // };
-
   const handleSubmit = async (value) => {
     setLoading(true);
     try {
-      // const city = await getCity(value.city);
-      const dbref = await db.ref(`feed/${value.district}/${selected}`).push();
+      const dbref = await db
+        .ref(`feed/${value.district.toLowerCase()}/${selected}`)
+        .push();
       const newResource = {
         name: value.name,
         phone: value.phone,
@@ -102,56 +75,6 @@ const AddResource = () => {
     setIsModalVisible(false);
   };
 
-  // Location search
-  function onChange(value) {
-    setFetching(false);
-    setSearch([]);
-    setValue(value.value);
-  }
-
-  const getLocation = (value) => {
-    setError(false);
-    let searchResults = [];
-    let splitBy = ",";
-    if (value.includes(" ")) splitBy = " ";
-    else if (value.includes(",")) splitBy = ",";
-    value.split(splitBy).map((val) => {
-      val = val.trim();
-      if (val !== "")
-        states.map((state) => {
-          if (state.state.toLowerCase().includes(val.toLowerCase())) {
-            searchResults.push(state.state);
-            state.districts.map((district) => {
-              searchResults.push(`${district}, ${state.state}`);
-            });
-          } else {
-            state.districts.map((district) => {
-              if (district.toLowerCase().includes(val.toLowerCase())) {
-                searchResults.push(`${district}, ${state.state}`);
-              }
-            });
-          }
-        });
-    });
-    searchResults.length === 0 && setError(true);
-    setSearch(searchResults);
-    setFetching(false);
-    setValue(value);
-  };
-
-  const debounceSearch = useCallback(
-    debounce((place) => getLocation(place), 200),
-    []
-  );
-
-  const onSearch = (value) => {
-    if (value.length !== 0) {
-      setSearch([]);
-      setFetching(true);
-      debounceSearch(value);
-    }
-  };
-
   function onStateChange(value) {
     setState(cityRaw[value]);
     setDistrict(cityRaw[value][0]);
@@ -160,6 +83,14 @@ const AddResource = () => {
   function onDistrictChange(value) {
     setDistrict(value);
   }
+
+  const changeFormValues = (value) => {
+    const formFieldName = Object.keys(value)[0];
+    if (formFieldName === "state") {
+      const state = Object.values(value)[0];
+      form.setFieldsValue({ district: cityRaw[state][0] });
+    }
+  };
 
   return (
     <>
@@ -202,6 +133,7 @@ const AddResource = () => {
             }}
             requiredMark={false}
             form={form}
+            onValuesChange={changeFormValues}
           >
             <Form.Item
               label="Resource"
@@ -242,8 +174,8 @@ const AddResource = () => {
                   message: `Please input the state where ${selected} is available`,
                 },
               ]}
+              initialValue="Kerala"
             >
-              {/* <Input /> */}
               <Select
                 showSearch
                 style={{ width: "100%" }}
@@ -274,12 +206,10 @@ const AddResource = () => {
                   message: `Please input the district where ${selected} is available`,
                 },
               ]}
+              initialValue="Alappuzha"
             >
               <Select
                 showSearch
-                style={{ width: "100%" }}
-                // value={district}
-                defaultValue={district}
                 value={district}
                 placeholder="Select a district"
                 optionFilterProp="children"
@@ -288,6 +218,7 @@ const AddResource = () => {
                 filterOption={(input, option) =>
                   option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
+                className="w-full"
               >
                 {state.map((doc, id) => (
                   <Option key={id} value={doc}>
@@ -358,8 +289,7 @@ const AddResource = () => {
             </Form.Item>
             <Button
               htmlType="submit"
-              className="bg-theme-color text-white focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white rounded font-semibold cursor-pointer"
-              style={{ width: "100%" }}
+              className="w-full bg-theme-color text-white focus:bg-theme-color focus:text-white hover:bg-theme-color hover:text-white rounded font-semibold cursor-pointer"
               size="large"
               loading={loading}
             >
