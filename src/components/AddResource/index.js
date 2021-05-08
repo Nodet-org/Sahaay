@@ -175,7 +175,6 @@ const AddResource = () => {
                   message: `Please input the state where ${selected} is available`,
                 },
               ]}
-              initialValue="Kerala"
             >
               <Select
                 showSearch
