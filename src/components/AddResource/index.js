@@ -5,6 +5,7 @@ import { states } from "../../utils/states.json";
 import { db } from "../../utils/firebase";
 
 import plusIcon from "../../assets/plus.svg";
+import { getUnit } from "../../utils/helpers";
 
 const { Option } = Select;
 
@@ -17,6 +18,7 @@ const AddResource = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selected, setSelected] = useState("oxygen");
   const [scrollY, setScrollY] = useState(0);
+  const [quantityUnit, setQuantityUnit] = useState("Litres");
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState(cityRaw["Kerala"]);
   const [district, setDistrict] = useState(cityRaw["Kerala"][0]);
@@ -84,6 +86,11 @@ const AddResource = () => {
     setDistrict(value);
   }
 
+  function onResourceChange(value) {
+    setSelected(value);
+    setQuantityUnit(getUnit(value))
+  }
+
   const changeFormValues = (value) => {
     const formFieldName = Object.keys(value)[0];
     if (formFieldName === "state") {
@@ -148,7 +155,7 @@ const AddResource = () => {
               ]}
               initialValue="oxygen"
             >
-              <Select onChange={(val) => setSelected(val)}>
+              <Select onChange={onResourceChange}>
                 <Option value="oxygen">Oxygen</Option>
                 <Option value="bed">Beds</Option>
                 <Option value="icu">ICU</Option>
@@ -227,22 +234,18 @@ const AddResource = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              label="Quantity"
+              label={`Quantity (No. of ${quantityUnit})`}
               requiredMark={false}
               name="quantity"
-              tooltip={`Enter the quantity of available ${selected}`}
+              tooltip={`Enter the quantity of available ${selected} (No. of ${quantityUnit})`}
               rules={[
                 {
                   required: true,
                   message: "Please input your the available quantity.",
-                },
-                {
-                  pattern: new RegExp("^[1-9][0-9]*$"),
-                  message: "Sorry, you can't add an unavailable resource !",
-                },
+                }
               ]}
             >
-              <Input placeholder={`The quantity of available ${selected}`} />
+              <Input placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`} />
             </Form.Item>
             <Form.Item
               label="Price"
