@@ -72,7 +72,7 @@ const Card = ({ post, resource, location }) => {
             <p className="font-semibold text-base w-16">Date</p>
             <div className="flex flex-row mx-2">
               <p className="mx-2">:</p>
-              <p>{post.date}</p>
+              <p>{post?.date}</p>
             </div>
           </div>
         </div>
