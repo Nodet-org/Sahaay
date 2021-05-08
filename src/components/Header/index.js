@@ -23,6 +23,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
     if (district) {
       setTweets([]);
       setLoading(true);
+      setLink("");
       let query = {
         cityOrPincode: district,
         resource: searchSelect,
