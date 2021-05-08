@@ -9,7 +9,7 @@ import { message, Button } from "antd";
 
 const Feed = ({ query, setCurrentTab, askLocation }) => {
   const [feed, setFeed] = useState([]);
-  const [resource, setResource] = useState();
+  const [resource, setResource] = useState("oxygen");
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useState();
 
@@ -27,12 +27,12 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
             .then(function (response) {
               if (
                 response?.data?.address?.state_district
-                  ?.split()[0]
+                  ?.split(" ")[0]
                   ?.toLowerCase()
               )
                 setCity(
                   response?.data?.address?.state_district
-                    ?.split()[0]
+                    ?.split(" ")[0]
                     ?.toLowerCase()
                 );
             });
@@ -41,42 +41,16 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
         message.error("Location fetching not suppprted");
       }
     }
-    if (query.city) {
-      fetchFromDB();
-    } else if (city) {
-      fetchCityData();
-    }
+    fetchFromDB();
     // react-hooks/exhaustive-deps
   }, [query, city]);
 
-  const fetchCityData = async () => {
-    setLoading(true);
-    const dbref = db.ref(`feed/${city}`);
-    await dbref.once("value", (snapshot) => {
-      if (snapshot.exists()) {
-        if (snapshot.val()) {
-          let newFeed = [];
-          let res;
-          Object.keys(snapshot.val()).map((docs) => {
-            // setResource(docs);
-            res = docs;
-            Object.values(snapshot.val()).map((value) => {
-              newFeed = value || [];
-            });
-          });
-          setResource(res);
-          setFeed(newFeed);
-        }
-      } else {
-        setFeed([]);
-      }
-    });
-    setLoading(false);
-  };
-
   const fetchFromDB = async () => {
-    setResource(query.resource);
-    const dbref = db.ref(`feed/${query.city}/${query.resource}`);
+    if (query.resource) setResource(query.resource);
+    else setResource("oxygen");
+    const dbref = db.ref(
+      `feed/${query.city || city}/${query.resource || "oxygen"}`
+    );
     await dbref.once("value", (snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.val()) setFeed(snapshot.val());

@@ -5,29 +5,12 @@ const HowToUse = () => {
         <h2 className="text-xl font-bold underline">If you need something</h2>
         <ul>
           <li className="mx-4 py-1 px-2 text-base">
-            If you are looking for something, in the search bar add your current
-            City{" "}
-            <b>
-              (or Pincode is preferred to give more generalized search results){" "}
-            </b>
-            and select the required item from the dropdown.
-          </li>
-          <li className="mx-4 py-1 px-2 text-base">
-            If you are looking for only verified items check the checkbox of{" "}
-            <span>verified</span> (This currently works only for tweets, would
-            add this feature for feed too)
+            If you are looking for something,{" "}
+            <b>select the State and District</b> and the required resource from
+            the dropdown.
           </li>
           <h3 className="text-base font-semibold underline">
             What if there is no feed? (Do not panic)
-          </h3>
-          <li className="mx-4 py-1 px-2 text-base">
-            Search for more generalised terms (District/State or neighbouring
-            city)
-          </li>
-        </ul>
-        <ul>
-          <h3 className="text-base font-semibold underline">
-            What if there is still no feed?
           </h3>
           <li className="mx-4 py-1 px-2 text-base">
             Checkout the tweets section, it would get the latest tweets from
@@ -45,8 +28,8 @@ const HowToUse = () => {
             feed.
             <br />
             <span className="text-gray-500 font-semibold">
-              Once an item gets 5 reports it would automatically be removed from
-              the list
+              Once an item gets 5 reports it would be verified by our team and
+              would be removed from the list accordingly
             </span>
           </li>
         </ul>
