@@ -244,7 +244,7 @@ const AddResource = () => {
                   message: "Please input your the available quantity.",
                 },
                 {
-                  pattern: new RegExp("^[1-9][1-9]*$"),
+                  pattern: new RegExp("^[1-9][0-9]*$"),
                   message: `Enter a valid quantity (>= 1)`
                 }
               ]}
