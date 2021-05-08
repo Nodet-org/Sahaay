@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, message, Button } from "antd";
+import { Modal, Form, Input, InputNumber, Select, message, Button } from "antd";
 import { states } from "../../utils/states.json";
 
 import { db } from "../../utils/firebase";
@@ -242,7 +242,7 @@ const AddResource = () => {
                 {
                   required: true,
                   message: "Please input your the available quantity.",
-                }
+                },
               ]}
             >
               <Input placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`} />
@@ -256,10 +256,10 @@ const AddResource = () => {
                 {
                   required: true,
                   message: "Please input your price. If free enter 0",
-                },
+                }
               ]}
             >
-              <Input placeholder="The price of the resource (0 would be a kindful act!)." />
+              <InputNumber min={0} className="w-full" placeholder="The price of the resource (0 would be a kindful act!)." />
             </Form.Item>
             <Form.Item
               label="Name"
@@ -285,6 +285,10 @@ const AddResource = () => {
                   required: true,
                   message: "Please input your phone",
                 },
+                {
+                  pattern: new RegExp("[7-9]{1}[0-9]{9}"),
+                  message: "Please enter a valid Phone Number"
+                }
               ]}
             >
               <Input placeholder="Your number" />
