@@ -28,20 +28,20 @@ const Tweets = ({ tweets, link }) => {
             </a>
           </div>
         )}
-        {tweets && tweets.length > 0 ? (
-          tweets.slice(0, limit).map((tweet, i) => (
-            <div
-              className="w-full flex justify-center my-4 tweetWrapper"
-              key={i}
-            >
-              <TweetCard tweetId={tweet} />
-            </div>
-          ))
-        ) : (
-          <div className="my-4 font-bold text-lg">
-            No tweets found. Try clicking the link
-          </div>
-        )}
+        {tweets && tweets.length > 0
+          ? tweets.slice(0, limit).map((tweet, i) => (
+              <div
+                className="w-full flex justify-center my-4 tweetWrapper"
+                key={i}
+              >
+                <TweetCard tweetId={tweet} />
+              </div>
+            ))
+          : link && (
+              <div className="my-4 font-bold text-lg">
+                No tweets found. Try clicking the link
+              </div>
+            )}
         {tweets && limit < tweets.length && (
           <Button
             onClick={() => {
