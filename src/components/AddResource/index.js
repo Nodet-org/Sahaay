@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Form, Input, InputNumber, Select, message, Button } from "antd";
+import { Modal, Form, Input, Select, message, Button } from "antd";
 import { states } from "../../utils/states.json";
 
 import { db } from "../../utils/firebase";
@@ -88,7 +88,7 @@ const AddResource = () => {
 
   function onResourceChange(value) {
     setSelected(value);
-    setQuantityUnit(getUnit(value))
+    setQuantityUnit(getUnit(value));
   }
 
   const changeFormValues = (value) => {
@@ -245,11 +245,15 @@ const AddResource = () => {
                 },
                 {
                   pattern: new RegExp("^[1-9][0-9]*$"),
-                  message: `Enter a valid quantity (>= 1)`
-                }
+                  message: `Enter a valid quantity (>= 1)`,
+                },
               ]}
             >
-              <Input className="w-full" min={1} placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`} />
+              <Input
+                className="w-full"
+                min={1}
+                placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`}
+              />
             </Form.Item>
             <Form.Item
               label="Price"
@@ -263,11 +267,14 @@ const AddResource = () => {
                 },
                 {
                   pattern: new RegExp("^[0-9]*$"),
-                  message: "Please enter a valid price"
-                }
+                  message: "Please enter a valid price",
+                },
               ]}
             >
-              <Input className="w-full" placeholder="The price of the resource (0 would be a kindful act!)." />
+              <Input
+                className="w-full"
+                placeholder="The price of the resource (0 would be a kindful act!)."
+              />
             </Form.Item>
             <Form.Item
               label="Name"
@@ -295,11 +302,15 @@ const AddResource = () => {
                 },
                 {
                   pattern: new RegExp("[7-9]{1}[0-9]{9}"),
-                  message: "Please enter a valid Phone Number"
-                }
+                  message: "Please enter a valid Phone Number",
+                },
+                {
+                  max: 10,
+                  message: "Please enter a valid Phone Number with 10 digits",
+                },
               ]}
             >
-              <Input placeholder="Your number" />
+              <Input placeholder="Your number" addonBefore="+91" />
             </Form.Item>
             <Button
               htmlType="submit"
