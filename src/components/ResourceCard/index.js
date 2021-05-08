@@ -7,7 +7,7 @@ import phoneLightIcon from "../../assets/phoneLight.svg";
 import closeIcon from "../../assets/close.svg";
 import personIcon from "../../assets/person.svg";
 import phoneIcon from "../../assets/phone.svg";
-// import whatsappIcon from "../../assets/whatsapp.svg";
+import whatsappIcon from "../../assets/whatsapp.svg";
 import timeIcon from "../../assets/time.svg";
 import dateIcon from "../../assets/date.svg";
 import emailIcon from "../../assets/email.svg";
@@ -131,7 +131,7 @@ const ResourceCard = (props) => {
               Posted At
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp; {props.post.date}
+              : &nbsp; {props.post.date !== -1 ? props.post.date : "NA"}
             </td>
           </tr>
           <tr>
@@ -142,7 +142,7 @@ const ResourceCard = (props) => {
               Time
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp; {props.post.time}
+              : &nbsp; {props.post.time !== -1 ? props.post.time : "NA"}
             </td>
           </tr>
           <tr>
@@ -153,7 +153,12 @@ const ResourceCard = (props) => {
               Price
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp; {props.post.price === "0" ? "Free" : props.post.price}
+              : &nbsp;{" "}
+              {props.post.price === "0"
+                ? "Free"
+                : props.post.price > 0
+                ? props.post.price
+                : "NA"}
             </td>
           </tr>
           <tr>
@@ -164,29 +169,38 @@ const ResourceCard = (props) => {
               Quantity
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp;{" "}
-              {props.post?.quantity === "0"
-                ? "Unavailable"
-                : props.post?.quantity}
+              : &nbsp; {props.post?.quantity < 0 ? "NA" : props.post?.quantity}
             </td>
           </tr>
         </table>
       </div>
       <div className="flex justify-between">
         <a
-          className="w-full bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
+          className="flex-1 px-2 mr-1 sm:mr-5 bg-theme-color flex items-center justify-center rounded-md h-10 my-5"
           href={`tel:${props.post.phone}`}
         >
-          <img src={phoneLightIcon} className="pr-5 text-white" alt="call" />
+          <img
+            src={phoneLightIcon}
+            height={40}
+            width={40}
+            className="h-6 w-6 sm:h-9 sm:w-9 pr-2 sm:pr-4 text-white"
+            alt="call"
+          />
           <span className="text-white font-bold">Call Now</span>
         </a>
-        {/* <a
-            className="w-1/2 bg-green-500 flex items-center justify-center rounded-md h-10 my-5 ml-2"
-            href={`https://api.whatsapp.com/send/?phone=91${props.post.phone}&text&app_absent=0`}
-          >
-            <img src={whatsappIcon} height={40} width={40} className="pr-4 text-white" alt="call" />
-            <span className="text-white font-bold">Send Message</span>
-          </a> */}
+        <a
+          className="flex-1 text-xs bg-green-500 flex items-center justify-center rounded-md h-10 my-5 ml-2"
+          href={`https://api.whatsapp.com/send/?phone=91${props.post.phone}&text&app_absent=0`}
+        >
+          <img
+            src={whatsappIcon}
+            height={40}
+            width={40}
+            className="h-6 w-6 sm:h-9 sm:w-9 pr-2 sm:pr-4 text-white"
+            alt="call"
+          />
+          <span className="text-white font-bold">Send Message</span>
+        </a>
       </div>
       <Button
         onClick={handleReportResource}

@@ -58,7 +58,7 @@ const Card = ({ post, resource, location }) => {
             <p className="font-semibold text-base w-16">Quantity</p>
             <div className="flex flex-row mx-2">
               <p className="mx-2">:</p>
-              <p>{post?.quantity}</p>
+              <p>{post?.quantity > 0 ? post?.quantity : "NA"}</p>
             </div>
           </div>
           <div className="flex flex-row justify-start items-center">
@@ -68,6 +68,13 @@ const Card = ({ post, resource, location }) => {
               <p>{location.charAt(0).toUpperCase() + location.slice(1)}</p>
             </div>
           </div>
+          <div className="flex flex-row justify-start items-center">
+            <p className="font-semibold text-base w-16">Date</p>
+            <div className="flex flex-row mx-2">
+              <p className="mx-2">:</p>
+              <p>{post?.date !== -1 ? post?.date : "NA"}</p>
+            </div>
+          </div>
         </div>
         {post?.price === "0" ? (
           <div className="flex justify-end">
@@ -75,7 +82,9 @@ const Card = ({ post, resource, location }) => {
           </div>
         ) : (
           <div className="flex justify-end">
-            <Tag color="blue">&#8377; {post.price}</Tag>
+            <Tag color="blue">
+              &#8377; {post?.price > 0 ? post?.price : "NA"}
+            </Tag>
           </div>
         )}
       </div>
