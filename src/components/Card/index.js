@@ -68,6 +68,13 @@ const Card = ({ post, resource, location }) => {
               <p>{location.charAt(0).toUpperCase() + location.slice(1)}</p>
             </div>
           </div>
+          <div className="flex flex-row justify-start items-center">
+            <p className="font-semibold text-base w-16">Date</p>
+            <div className="flex flex-row mx-2">
+              <p className="mx-2">:</p>
+              <p>{post.date}</p>
+            </div>
+          </div>
         </div>
         {post?.price === "0" ? (
           <div className="flex justify-end">

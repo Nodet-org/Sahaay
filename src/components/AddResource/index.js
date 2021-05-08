@@ -243,9 +243,13 @@ const AddResource = () => {
                   required: true,
                   message: "Please input your the available quantity.",
                 },
+                {
+                  pattern: new RegExp("^[1-9]*$"),
+                  message: `Enter a valid quantity (>= 1)`
+                }
               ]}
             >
-              <Input placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`} />
+              <Input className="w-full" min={1} placeholder={`The quantity of available ${selected} (No. of ${quantityUnit})`} />
             </Form.Item>
             <Form.Item
               label="Price"
