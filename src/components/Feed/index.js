@@ -18,6 +18,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
 
   useEffect(() => {
     if (askLocation) {
+      setLoading(true);
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((pos) => {
           axios
@@ -42,7 +43,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
       }
     }
     fetchFromDB();
-    // react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, city]);
 
   const fetchFromDB = async () => {
@@ -58,6 +59,7 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
         setFeed([]);
       }
     });
+    setLoading(false);
   };
 
   if (Object.keys(query).length === 0 && Object.keys(feed).length === 0)

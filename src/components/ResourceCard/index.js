@@ -57,10 +57,12 @@ const ResourceCard = (props) => {
 
   useEffect(() => {
     setIsReported(localStorage.getItem(`isReported_${props.post.id}`));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem(`isReported_${props.post.id}`)]);
 
   useEffect(() => {
     setReports(props?.post.reports);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -162,7 +164,10 @@ const ResourceCard = (props) => {
               Quantity
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp; {props.post?.quantity === "0" ? "Unavailable" : props.post?.quantity}
+              : &nbsp;{" "}
+              {props.post?.quantity === "0"
+                ? "Unavailable"
+                : props.post?.quantity}
             </td>
           </tr>
         </table>
