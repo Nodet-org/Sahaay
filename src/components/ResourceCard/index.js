@@ -96,7 +96,10 @@ const ResourceCard = (props) => {
               Name
             </td>
             <td className="text-sm sm:text-base font-semibold sm:px-4">
-              : &nbsp; {props.post.name}
+              : &nbsp;{" "}
+              {props?.post?.name?.length > 28
+                ? `${props?.post?.name?.slice(0, 28)}...`
+                : props?.post?.name}
             </td>
           </tr>
           <tr>
