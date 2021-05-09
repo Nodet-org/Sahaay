@@ -49,16 +49,40 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
   const fetchFromDB = async () => {
     if (query.resource) setResource(query.resource);
     else setResource("oxygen");
-    const dbref = db.ref(
+    const dbref1 = db.ref(
       `feed/${query.city || city}/${query.resource || "oxygen"}`
     );
-    await dbref.once("value", (snapshot) => {
+    let tempFeed = {};
+    await dbref1.once("value", (snapshot) => {
       if (snapshot.exists()) {
-        if (snapshot.val()) setFeed(snapshot.val());
-      } else {
-        setFeed([]);
+        if (snapshot.val()) {
+          // eslint-disable-next-line array-callback-return
+          Object.keys(snapshot.val()).map((key) => {
+            tempFeed = {
+              ...tempFeed,
+              [key]: snapshot.val()[key],
+            };
+          });
+        }
       }
     });
+    const dbref2 = db.ref(
+      `scrapedFeed/${query.city || city}/${query.resource || "oxygen"}`
+    );
+    await dbref2.once("value", (snapshot) => {
+      if (snapshot.exists()) {
+        if (snapshot.val()) {
+          // eslint-disable-next-line array-callback-return
+          Object.keys(snapshot.val()).map((key) => {
+            tempFeed = {
+              ...tempFeed,
+              [key]: snapshot.val()[key],
+            };
+          });
+        }
+      }
+    });
+    setFeed(tempFeed);
     setLoading(false);
   };
 
