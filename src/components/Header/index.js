@@ -146,7 +146,7 @@ const Header = ({ setTweets, setLink, setQuery }) => {
               <Option value="tocilizumab">Tocilizumab</Option>
               <Option value="plasma">Plasma</Option>
               <Option value="food">Food</Option>
-              <Option value="Ambulance">Ambulance</Option>
+              <Option value="ambulance">Ambulance</Option>
             </Select>
           </div>
           <div className="flex-1">
