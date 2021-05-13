@@ -69,19 +69,30 @@ const Feed = ({ query, setCurrentTab, askLocation }) => {
     const dbref2 = db.ref(
       `scrapedFeed/${query.city || city}/${query.resource || "oxygen"}`
     );
-    await dbref2.once("value", (snapshot) => {
-      if (snapshot.exists()) {
-        if (snapshot.val()) {
-          // eslint-disable-next-line array-callback-return
-          Object.keys(snapshot.val()).map((key) => {
-            tempFeed = {
-              ...tempFeed,
-              [key]: snapshot.val()[key],
-            };
-          });
-        }
+    let scrappedData = await fetch("https://raw.githubusercontent.com/No-det/sahaay-scrape/main/data.json").then(res => res.json());
+    // console.log(scrappedData[query.city || city][query.resource || "oxygen"]);
+    let snapshot = {}
+    if (scrappedData[query.city || city])
+      snapshot = scrappedData[query.city || city][query.resource || "oxygen"];
+    snapshot && Object.keys(snapshot).map((key) => {
+      tempFeed = {
+        ...tempFeed,
+        [key]: snapshot[key]
       }
-    });
+    })
+    // await dbref2.once("value", (snapshot) => {
+    //   if (snapshot.exists()) {
+    //     if (snapshot.val()) {
+    //       // eslint-disable-next-line array-callback-return
+    //       Object.keys(snapshot.val()).map((key) => {
+    //         tempFeed = {
+    //           ...tempFeed,
+    //           [key]: snapshot.val()[key],
+    //         };
+    //       });
+    //     }
+    //   }
+    // });
     setFeed(tempFeed);
     setLoading(false);
   };

@@ -62,7 +62,7 @@ const AddResource = () => {
       await dbref.set(newResource);
       form.resetFields();
       message.success(
-        "Added Resource successfully! Thank you for your valuable contribution"
+        "Added Resource successfully! Thank you for your valuable contribution."
       );
       setLoading(false);
       setIsModalVisible(false);
